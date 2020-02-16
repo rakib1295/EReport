@@ -86,10 +86,11 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="2*"/>
-                    <RowDefinition Height="5*"/>
-                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="4*"/>
                     <RowDefinition Height="2*"/>
-                    <RowDefinition Height="7*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="3*"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -107,7 +108,7 @@
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" HorizontalAlignment="Right" Margin="5,5" TextWrapping="Wrap" Text="Enter the time of action in the box at right: (e.g: 6:30:00 AM)" FontWeight="Bold" VerticalAlignment="Top"/>
-                    <TextBox Grid.Column="1" x:Name="Alarm_time_textbox" HorizontalAlignment="Right" Text="8:00:00 AM" Margin="5,5" TextWrapping="Wrap" TextChanged="Alarm_TextBox_TextChanged_1"/>
+                    <TextBox Grid.Column="1" x:Name="Action_time_textbox" HorizontalAlignment="Right" Margin="5,5" TextWrapping="Wrap" TextChanged="Alarm_TextBox_TextChanged_1"/>
                 </Grid>
 
                 <Grid Grid.Row="2">
@@ -115,7 +116,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="9*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5" TextWrapping="Wrap" Text="Sub:" FontWeight="Bold" VerticalAlignment="Top" FontSize="16"/>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5,0,0" TextWrapping="Wrap" Text="Sub:" FontWeight="Bold" VerticalAlignment="Top" FontSize="14"/>
                     <TextBox Grid.Column="1" x:Name="Sub" Margin="5,5" TextWrapping="Wrap" TextChanged="Sub_TextChanged"/>
                 </Grid>
 
@@ -124,7 +125,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="9*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5" TextWrapping="Wrap" Text="To:" FontWeight="Bold" VerticalAlignment="Top" FontSize="16"/>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5,0,0" TextWrapping="Wrap" Text="To:" FontWeight="Bold" VerticalAlignment="Top" FontSize="14"/>
                     <TextBox x:Name="To" Grid.Column="1" AcceptsReturn="True" Margin="5,5" TextWrapping="Wrap" TextChanged="To_TextChanged" MouseEnter="To_MouseEnter_1" MouseLeave="To_MouseLeave_1"/>
                 </Grid>
                 <Grid Grid.Row="4">
@@ -132,7 +133,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="9*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5" TextWrapping="Wrap" Text="CC:" FontWeight="Bold" VerticalAlignment="Top" FontSize="16"/>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5,0,0" TextWrapping="Wrap" Text="CC:" FontWeight="Bold" VerticalAlignment="Top" FontSize="14"/>
                     <TextBox x:Name="CC" Grid.Column="1" AcceptsReturn="True" Margin="5,5" TextWrapping="Wrap" TextChanged="CC_TextChanged" MouseEnter="To_MouseEnter_1" MouseLeave="To_MouseLeave_1"/>
                 </Grid>
                 <Grid Grid.Row="5">
@@ -140,7 +141,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="9*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5" TextWrapping="Wrap" Text="Bcc:" FontWeight="Bold" VerticalAlignment="Top" FontSize="16"/>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5,0,0" TextWrapping="Wrap" Text="Bcc:" FontWeight="Bold" VerticalAlignment="Top" FontSize="14"/>
                     <TextBox Grid.Column="1" x:Name="Bcc" AcceptsReturn="True" Margin="5,5" TextWrapping="Wrap" TextChanged="BCC_TextChanged" MouseEnter="To_MouseEnter_1" MouseLeave="To_MouseLeave_1"/>
 
                 </Grid>
@@ -149,9 +150,18 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="9*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5" TextWrapping="Wrap" Text="Body:" FontWeight="Bold" VerticalAlignment="Top" FontSize="16"/>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5,0,0" TextWrapping="Wrap" Text="Body:" FontWeight="Bold" VerticalAlignment="Top" FontSize="14"/>
                     <TextBox Grid.Column="1" x:Name="Body" AcceptsReturn="True" Margin="5,5" TextWrapping="Wrap" TextChanged="Body_TextChanged"/>
-
+                </Grid>
+                <Grid Grid.Row="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="9*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" HorizontalAlignment="Left" Margin="15,5,0,0" TextWrapping="Wrap" Text="Signature:" FontWeight="Bold" VerticalAlignment="Top" FontSize="14"/>
+                    <ScrollViewer Grid.Column="1" x:Name="_scrollbar_sig" VerticalScrollBarVisibility="Auto" Margin="5,5">
+                        <TextBlock x:Name="SignatureBody"  TextWrapping="Wrap"/>
+                    </ScrollViewer>
                 </Grid>
             </Grid>
         </Grid>
@@ -164,7 +174,7 @@
             </Grid.ColumnDefinitions>
             <Image Grid.Column="0" Source="Images/image_0Iw_icon.ico" HorizontalAlignment="Left" Opacity=".5" Margin="5,0,0,2"/>
             <TextBlock Grid.Column="1" x:Name="_version_txtblk" TextAlignment="Center" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" Width="282" Height="30"
-                           FontSize="9"><Run Text="BTCL &#169; 2018 All Rights Reserved."/><LineBreak/><Run Text="Version: 6.10.0.56"/></TextBlock>
+                           FontSize="9"><Run Text="BTCL &#169; 2018 All Rights Reserved."/><LineBreak/><Run x:Name="versionNumber"/></TextBlock>
 
             <TextBlock Grid.Column="2" x:Name="credit_label" HorizontalAlignment="Right" TextAlignment="Right" VerticalAlignment="Center" Margin="5,0,10,0">
                     <Hyperlink x:Name="_credit_link" NavigateUri="https://www.linkedin.com/in/md-rakib-subaid/" RequestNavigate="Hyperlink_RequestNavigate" FontFamily="Lucida Calligraphy" FontSize="12">
@@ -215,16 +225,16 @@
                             <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="email ID:" Grid.Row="0" Grid.Column="0" Margin="5,5,0,0"/>
-                        <TextBox x:Name="user_name" TextChanged="user_name_TextChanged_1" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"  Margin="5,0,0,2"/>
+                        <TextBox x:Name="user_email" Width="200" TextChanged="user_name_TextChanged_1" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"  Margin="5,0,0,2"/>
 
                         <TextBlock Text="Password:"  Grid.Row="1" Grid.Column="0" Margin="5,5,0,0"/>
-                        <PasswordBox x:Name="acc_psw" PasswordChar="*" PasswordChanged="acc_psw_PasswordChanged_1" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" Margin="5,2,0,2"/>
+                        <PasswordBox x:Name="acc_psw" Width="200" PasswordChar="*" PasswordChanged="acc_psw_PasswordChanged_1" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" Margin="5,2,0,2"/>
 
                         <TextBlock Text="SMTP Client:" Grid.Row="2" Grid.Column="0" Margin="5,5,0,0" FontSize="10" />
-                        <TextBox x:Name="SMTP_Client" TextChanged="SMTP_Client_TextChanged" Text="smtp.gmail.com" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"  Margin="5,0,0,2"/>
+                        <TextBox x:Name="SMTP_Client" Width="200" TextChanged="SMTP_Client_TextChanged" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left"  Margin="5,0,0,2"/>
 
                         <TextBlock Text="SMTP Port:" Grid.Row="3" Grid.Column="0" Margin="5,5,0,0" FontSize="10" />
-                        <TextBox x:Name="SMTP_Port" TextChanged="SMTP_Port_TextChanged" Text="587" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"  Margin="5,2,0,2"/>
+                        <TextBox x:Name="SMTP_Port" Width="80" TextChanged="SMTP_Port_TextChanged" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left"  Margin="5,2,0,2"/>
                     </Grid>
                 </Grid>
 
@@ -243,7 +253,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="IDD incoming traffic acceptance limit ICX vs. IGW (%)" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                        <TextBox Grid.Column="1" x:Name="Error_percentage_textbox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="0.3" TextChanged="Error_percentage_textbox_TextChanged_1"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="1" x:Name="IDD_in_Error_percentage_textbox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="40" Text="0.3" TextChanged="Error_percentage_textbox_TextChanged_1"  VerticalAlignment="Top"/>
                     </Grid>
                     <Grid Grid.Row="3">
                         <Grid.ColumnDefinitions>
@@ -251,7 +261,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="General traffic difference acceptance limit (%)" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                        <TextBox Grid.Column="1" x:Name="General_percentage_textbox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="1.0" TextChanged="General_percentage_textbox_TextChanged_1"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="1" x:Name="General_percentage_textbox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="40" Text="1.0" TextChanged="General_percentage_textbox_TextChanged_1"  VerticalAlignment="Top"/>
                     </Grid>
                 </Grid> 
                 

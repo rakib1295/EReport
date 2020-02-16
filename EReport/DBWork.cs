@@ -104,7 +104,7 @@ namespace EReport
                 da = new OracleDataAdapter(cmd);
                 da.Fill(ds1);
 
-                name = "IGW-Total (Overseas to local operator)";
+                name = "IGW (Overseas to local operator)";
 
                 //rowNum++;
                 //rowNum++;
@@ -116,40 +116,40 @@ namespace EReport
                 rowNum = EW.Difference_Entry_in_Excel(ref xlWorkSheet1, rowNum1, rowNum2, IDDincoming_acceptance_diff, "LEFT");
 
                 /////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = cmd.CommandText = "select t.CALLED_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    " and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23','24','25') and t.RESERVE3 = 'BTCL_IGW1' group by t.CALLED_OPERATOR order by t.CALLED_OPERATOR";
-                ds1 = new DataSet();
-                da = new OracleDataAdapter(cmd);
-                da.Fill(ds1);
+                //cmd.CommandText = cmd.CommandText = "select t.CALLED_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                //    " and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23','24','25') and t.RESERVE3 = 'BTCL_IGW1' group by t.CALLED_OPERATOR order by t.CALLED_OPERATOR";
+                //ds1 = new DataSet();
+                //da = new OracleDataAdapter(cmd);
+                //da.Fill(ds1);
 
-                name = "From IGW1 (Overseas to local operator)";
+                //name = "From IGW1 (Overseas to local operator)";
 
-                rowNum++;
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet1, ref ds1, rowNum, name, operator_type);
-
-
-                ds1.Dispose();
-                da.Dispose();
+                //rowNum++;
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet1, ref ds1, rowNum, name, operator_type);
 
 
-                //////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = cmd.CommandText = "select t.CALLED_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    " and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23','24','25') and t.RESERVE3 = 'ITX7' group by t.CALLED_OPERATOR order by t.CALLED_OPERATOR";
-                ds1 = new DataSet();
-                da = new OracleDataAdapter(cmd);
-                da.Fill(ds1);
-
-                name = "From ITX7 (Overseas to local operator)";
-
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet1, ref ds1, rowNum, name, operator_type);
+                //ds1.Dispose();
+                //da.Dispose();
 
 
-                ds1.Dispose();
-                da.Dispose();
+                ////////////////////////////////////////////////////////////////////////////////////////////////
+                //cmd.CommandText = cmd.CommandText = "select t.CALLED_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                //    " and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23','24','25') and t.RESERVE3 = 'ITX7' group by t.CALLED_OPERATOR order by t.CALLED_OPERATOR";
+                //ds1 = new DataSet();
+                //da = new OracleDataAdapter(cmd);
+                //da.Fill(ds1);
+
+                //name = "From ITX7 (Overseas to local operator)";
+
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet1, ref ds1, rowNum, name, operator_type);
+
+
+                //ds1.Dispose();
+                //da.Dispose();
 
                 LogViewer = "IDD In: Successfully created first sheet.";
                 /////////////////////////////////first sheet completed//////////////////////////////////////
@@ -166,7 +166,7 @@ namespace EReport
                 da = new OracleDataAdapter(cmd);
                 da.Fill(ds1);
 
-                name = "From IGW-Total (From carriers to IGW)";
+                name = "From IGW (From carriers to IGW)";
                 operator_type = "Calling Operators";
                 rowNum = 1;
                 rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
@@ -177,37 +177,37 @@ namespace EReport
 
 
                 ///////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    "and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23','24','25') and t.RESERVE3 = 'BTCL_IGW1' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
-                ds1 = new DataSet();
-                da = new OracleDataAdapter(cmd);
-                da.Fill(ds1);
+                //cmd.CommandText = cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                //    "and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23','24','25') and t.RESERVE3 = 'BTCL_IGW1' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+                //ds1 = new DataSet();
+                //da = new OracleDataAdapter(cmd);
+                //da.Fill(ds1);
 
-                name = "From IGW1 (From carriers to IGW)";
+                //name = "From IGW1 (From carriers to IGW)";
 
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
-
-
-                ds1.Dispose();
-                da.Dispose();
-
-                cmd.CommandText = cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    "and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23','24','25') and t.RESERVE3 = 'ITX7' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
-                ds1 = new DataSet();
-                da = new OracleDataAdapter(cmd);
-                da.Fill(ds1);
-
-                name = "From ITX7 (From carriers to IGW)";
-
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
 
 
-                ds1.Dispose();
-                da.Dispose();
+                //ds1.Dispose();
+                //da.Dispose();
+
+                //cmd.CommandText = cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                //    "and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23','24','25') and t.RESERVE3 = 'ITX7' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+                //ds1 = new DataSet();
+                //da = new OracleDataAdapter(cmd);
+                //da.Fill(ds1);
+
+                //name = "From ITX7 (From carriers to IGW)";
+
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
+
+
+                //ds1.Dispose();
+                //da.Dispose();
 
                 LogViewer = "IDD In: Successfully created second sheet.";
                 /////////////////////////////////second sheet completed//////////////////////////////////////
@@ -251,7 +251,7 @@ namespace EReport
                 ds1 = new DataSet();
                 da.Fill(ds1);
 
-                name = "From IGW-Total (Overseas to local operator)";
+                name = "From IGW (Overseas to local operator)";
                 rowNum++;
                 rowNum++;
                 rowNum++;
@@ -264,56 +264,51 @@ namespace EReport
 
 
                 //////////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.CALLED_OPERATOR from cdr_inter_itx_d_stat p " +
-                    "where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and p.TRANSIT_TYPE in ('23','24','25') and p.SWITCH_ID = 'BTCL_IGW1' and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm')) " +
-                    "pivot(" +
-                    " sum(DURATION_FLOAT)" +
-                    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
-                    " ) piv";
+                //cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.CALLED_OPERATOR from cdr_inter_itx_d_stat p " +
+                //    "where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and p.TRANSIT_TYPE in ('23','24','25') and p.SWITCH_ID = 'BTCL_IGW1' and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm')) " +
+                //    "pivot(" +
+                //    " sum(DURATION_FLOAT)" +
+                //    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
+                //    " ) piv";
 
-                da = new OracleDataAdapter(cmd);
-                ds1 = new DataSet();
-                da.Fill(ds1);
+                //da = new OracleDataAdapter(cmd);
+                //ds1 = new DataSet();
+                //da.Fill(ds1);
 
-                name = "From IGW1 (Overseas to local operator)";
-                rowNum++;
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet3, ref ds1, rowNum, name, 1, operator_type);
+                //name = "From IGW1 (Overseas to local operator)";
+                //rowNum++;
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet3, ref ds1, rowNum, name, 1, operator_type);
 
-                ds1.Dispose();
-                da.Dispose();
-                LogViewer = "IDD In: Completed query of hourly IGW1 data for local operator.";
+                //ds1.Dispose();
+                //da.Dispose();
+                //LogViewer = "IDD In: Completed query of hourly IGW1 data for local operator.";
 
 
-                /////////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.CALLED_OPERATOR from cdr_inter_itx_d_stat p " +
-                    "where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and p.TRANSIT_TYPE in ('23','24','25') and p.SWITCH_ID = 'ITX7' and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm')) " +
-                    "pivot(" +
-                    " sum(DURATION_FLOAT)" +
-                    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
-                    " ) piv";
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
+                //cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.CALLED_OPERATOR from cdr_inter_itx_d_stat p " +
+                //    "where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and p.TRANSIT_TYPE in ('23','24','25') and p.SWITCH_ID = 'ITX7' and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm')) " +
+                //    "pivot(" +
+                //    " sum(DURATION_FLOAT)" +
+                //    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
+                //    " ) piv";
 
-                da = new OracleDataAdapter(cmd);
-                ds1 = new DataSet();
-                da.Fill(ds1);
+                //da = new OracleDataAdapter(cmd);
+                //ds1 = new DataSet();
+                //da.Fill(ds1);
 
-                name = "From ITX7 (Overseas to local operator)";
-                rowNum++;
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet3, ref ds1, rowNum, name, 1, operator_type);
+                //name = "From ITX7 (Overseas to local operator)";
+                //rowNum++;
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet3, ref ds1, rowNum, name, 1, operator_type);
 
-                ds1.Dispose();
-                da.Dispose();
-                LogViewer = "IDD In: Completed query of hourly ITX7 data for local operator.";
+                //ds1.Dispose();
+                //da.Dispose();
+                //LogViewer = "IDD In: Completed query of hourly ITX7 data for local operator.";
 
                 LogViewer = "IDD In: Successfully created third sheet.";
-
-                //Excel.Range _col = (Excel.Range)xlWorkSheet3.Columns[3];
-                //_col.Activate();
-                //_col.Application.ActiveWindow.SplitRow = 1;
-                //_col.Application.ActiveWindow.FreezePanes = true;
 
                 ((Excel._Worksheet)xlWorkSheet3).Activate();
                 xlWorkSheet3.Application.ActiveWindow.SplitColumn = 2;
@@ -340,7 +335,7 @@ namespace EReport
                 da.Fill(ds1);
 
                 rowNum = 1;
-                name = "From IGW-Total (From carriers to IGW)";
+                name = "From IGW (From carriers to IGW)";
                 operator_type = "Calling Operators";
 
                 rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet4, ref ds1, rowNum, name, 1, operator_type);
@@ -352,49 +347,49 @@ namespace EReport
 
 
                 //////////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.TRUNKIN_OPERATOR from cdr_inter_itx_d_stat p" +
-                    " where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'dd') and p.TRANSIT_TYPE in ('23','24','25')  and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'yyyymm') and p.SWITCH_ID = 'BTCL_IGW1')" +
-                    " pivot(" +
-                    " sum(DURATION_FLOAT) " +
-                    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
-                    " ) piv";
+                //cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.TRUNKIN_OPERATOR from cdr_inter_itx_d_stat p" +
+                //    " where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'dd') and p.TRANSIT_TYPE in ('23','24','25')  and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'yyyymm') and p.SWITCH_ID = 'BTCL_IGW1')" +
+                //    " pivot(" +
+                //    " sum(DURATION_FLOAT) " +
+                //    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
+                //    " ) piv";
 
-                da = new OracleDataAdapter(cmd);
-                ds1 = new DataSet();
-                da.Fill(ds1);
+                //da = new OracleDataAdapter(cmd);
+                //ds1 = new DataSet();
+                //da.Fill(ds1);
 
-                name = "From IGW1 (From carriers to IGW)";
-                rowNum++;
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet4, ref ds1, rowNum, name, 1, operator_type);
+                //name = "From IGW1 (From carriers to IGW)";
+                //rowNum++;
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet4, ref ds1, rowNum, name, 1, operator_type);
 
-                ds1.Dispose();
-                da.Dispose();
-                LogViewer = "IDD In: Completed query of hourly IGW1 data for carrier.";
+                //ds1.Dispose();
+                //da.Dispose();
+                //LogViewer = "IDD In: Completed query of hourly IGW1 data for carrier.";
 
 
-                /////////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.TRUNKIN_OPERATOR from cdr_inter_itx_d_stat p" +
-                    " where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'dd') and p.TRANSIT_TYPE in ('23','24','25') and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'yyyymm') and p.SWITCH_ID = 'ITX7')" +
-                    " pivot(" +
-                    " sum(DURATION_FLOAT) " +
-                    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
-                    " ) piv";
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
+                //cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.TRUNKIN_OPERATOR from cdr_inter_itx_d_stat p" +
+                //    " where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'dd') and p.TRANSIT_TYPE in ('23','24','25') and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'yyyymm') and p.SWITCH_ID = 'ITX7')" +
+                //    " pivot(" +
+                //    " sum(DURATION_FLOAT) " +
+                //    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
+                //    " ) piv";
 
-                da = new OracleDataAdapter(cmd);
-                ds1 = new DataSet();
-                da.Fill(ds1);
+                //da = new OracleDataAdapter(cmd);
+                //ds1 = new DataSet();
+                //da.Fill(ds1);
 
-                name = "From ITX7 (From carriers to IGW)";
-                rowNum++;
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet4, ref ds1, rowNum, name, 1, operator_type);
+                //name = "From ITX7 (From carriers to IGW)";
+                //rowNum++;
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet4, ref ds1, rowNum, name, 1, operator_type);
 
-                ds1.Dispose();
-                da.Dispose();
-                LogViewer = "IDD In: Completed query of hourly ITX7 data for carrier.";
+                //ds1.Dispose();
+                //da.Dispose();
+                //LogViewer = "IDD In: Completed query of hourly ITX7 data for carrier.";
 
                 LogViewer = "IDD In: Successfully created fourth sheet.";
 
@@ -488,7 +483,7 @@ namespace EReport
                 da = new OracleDataAdapter(cmd);
                 da.Fill(ds1);
 
-                name = "IGW-Total (From local operators to overseas)";
+                name = "IGW (From local operators to overseas)";
 
                 rowNum++;
                 rowNum++;
@@ -501,40 +496,40 @@ namespace EReport
                 rowNum = EW.Difference_Entry_in_Excel(ref xlWorkSheet1, rowNum1, rowNum2, General_acceptance_diff, "RIGHT");
 
                 /////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = cmd.CommandText = "select t.CALLING_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    " and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('20','21','22') and t.RESERVE3 = 'BTCL_IGW1' group by t.CALLING_OPERATOR order by t.CALLING_OPERATOR";
-                ds1 = new DataSet();
-                da = new OracleDataAdapter(cmd);
-                da.Fill(ds1);
+                //cmd.CommandText = cmd.CommandText = "select t.CALLING_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                //    " and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('20','21','22') and t.RESERVE3 = 'BTCL_IGW1' group by t.CALLING_OPERATOR order by t.CALLING_OPERATOR";
+                //ds1 = new DataSet();
+                //da = new OracleDataAdapter(cmd);
+                //da.Fill(ds1);
 
-                name = "From IGW1 (From local operators to overseas)";
+                //name = "From IGW1 (From local operators to overseas)";
 
-                rowNum++;
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet1, ref ds1, rowNum, name, operator_type);
-
-
-                ds1.Dispose();
-                da.Dispose();
+                //rowNum++;
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet1, ref ds1, rowNum, name, operator_type);
 
 
-                //////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = cmd.CommandText = "select t.CALLING_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    " and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('20','21','22') and t.RESERVE3 = 'ITX7' group by t.CALLING_OPERATOR order by t.CALLING_OPERATOR";
-                ds1 = new DataSet();
-                da = new OracleDataAdapter(cmd);
-                da.Fill(ds1);
-
-                name = "From ITX7 (From local operators to overseas)";
-
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet1, ref ds1, rowNum, name, operator_type);
+                //ds1.Dispose();
+                //da.Dispose();
 
 
-                ds1.Dispose();
-                da.Dispose();
+                ////////////////////////////////////////////////////////////////////////////////////////////////
+                //cmd.CommandText = cmd.CommandText = "select t.CALLING_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                //    " and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('20','21','22') and t.RESERVE3 = 'ITX7' group by t.CALLING_OPERATOR order by t.CALLING_OPERATOR";
+                //ds1 = new DataSet();
+                //da = new OracleDataAdapter(cmd);
+                //da.Fill(ds1);
+
+                //name = "From ITX7 (From local operators to overseas)";
+
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet1, ref ds1, rowNum, name, operator_type);
+
+
+                //ds1.Dispose();
+                //da.Dispose();
 
                 LogViewer = "IDD Out: Successfully created first sheet.";
                 /////////////////////////////////first sheet completed//////////////////////////////////////
@@ -551,7 +546,7 @@ namespace EReport
                 da = new OracleDataAdapter(cmd);
                 da.Fill(ds1);
 
-                name = "From IGW-Total (IGW to carriers)";
+                name = "From IGW (IGW to carriers)";
                 operator_type = "Called Operators";
 
                 rowNum = 1;
@@ -563,37 +558,37 @@ namespace EReport
 
 
                 ///////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = cmd.CommandText = "select t.TRUNKOUT_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    "and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('20','21','22')  and t.RESERVE3 = 'BTCL_IGW1' group by t.TRUNKOUT_OPERATOR order by t.TRUNKOUT_OPERATOR";
-                ds1 = new DataSet();
-                da = new OracleDataAdapter(cmd);
-                da.Fill(ds1);
+                //cmd.CommandText = cmd.CommandText = "select t.TRUNKOUT_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                //    "and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('20','21','22')  and t.RESERVE3 = 'BTCL_IGW1' group by t.TRUNKOUT_OPERATOR order by t.TRUNKOUT_OPERATOR";
+                //ds1 = new DataSet();
+                //da = new OracleDataAdapter(cmd);
+                //da.Fill(ds1);
 
-                name = "From IGW1 (IGW to carriers)";
+                //name = "From IGW1 (IGW to carriers)";
 
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
-
-
-                ds1.Dispose();
-                da.Dispose();
-
-                cmd.CommandText = cmd.CommandText = "select t.TRUNKOUT_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    "and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('20','21','22')  and t.RESERVE3 = 'ITX7' group by t.TRUNKOUT_OPERATOR order by t.TRUNKOUT_OPERATOR";
-                ds1 = new DataSet();
-                da = new OracleDataAdapter(cmd);
-                da.Fill(ds1);
-
-                name = "From ITX7 (IGW to carriers)";
-
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
 
 
-                ds1.Dispose();
-                da.Dispose();
+                //ds1.Dispose();
+                //da.Dispose();
+
+                //cmd.CommandText = cmd.CommandText = "select t.TRUNKOUT_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                //    "and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('20','21','22')  and t.RESERVE3 = 'ITX7' group by t.TRUNKOUT_OPERATOR order by t.TRUNKOUT_OPERATOR";
+                //ds1 = new DataSet();
+                //da = new OracleDataAdapter(cmd);
+                //da.Fill(ds1);
+
+                //name = "From ITX7 (IGW to carriers)";
+
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
+
+
+                //ds1.Dispose();
+                //da.Dispose();
 
                 LogViewer = "IDD Out: Successfully created second sheet.";
                 /////////////////////////////////second sheet completed//////////////////////////////////////
@@ -637,7 +632,7 @@ namespace EReport
                 ds1 = new DataSet();
                 da.Fill(ds1);
 
-                name = "From IGW-Total (From local operators to overseas)";
+                name = "From IGW (From local operators to overseas)";
                 rowNum++;
                 rowNum++;
                 rowNum++;
@@ -650,49 +645,49 @@ namespace EReport
 
 
                 //////////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.CALLING_OPERATOR from cdr_inter_itx_d_stat p " +
-                    "where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and p.TRANSIT_TYPE in ('20','21','22') and p.SWITCH_ID = 'BTCL_IGW1' and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm')) " +
-                    "pivot(" +
-                    " sum(DURATION_FLOAT)" +
-                    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
-                    " ) piv";
+                //cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.CALLING_OPERATOR from cdr_inter_itx_d_stat p " +
+                //    "where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and p.TRANSIT_TYPE in ('20','21','22') and p.SWITCH_ID = 'BTCL_IGW1' and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm')) " +
+                //    "pivot(" +
+                //    " sum(DURATION_FLOAT)" +
+                //    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
+                //    " ) piv";
 
-                da = new OracleDataAdapter(cmd);
-                ds1 = new DataSet();
-                da.Fill(ds1);
+                //da = new OracleDataAdapter(cmd);
+                //ds1 = new DataSet();
+                //da.Fill(ds1);
 
-                name = "From IGW1 (From local operators to overseas)";
-                rowNum++;
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet3, ref ds1, rowNum, name, 1, operator_type);
+                //name = "From IGW1 (From local operators to overseas)";
+                //rowNum++;
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet3, ref ds1, rowNum, name, 1, operator_type);
 
-                ds1.Dispose();
-                da.Dispose();
-                LogViewer = "IDD Out: Completed query of hourly IGW1 data for local operator.";
+                //ds1.Dispose();
+                //da.Dispose();
+                //LogViewer = "IDD Out: Completed query of hourly IGW1 data for local operator.";
 
 
-                /////////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.CALLING_OPERATOR from cdr_inter_itx_d_stat p " +
-                    "where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and p.TRANSIT_TYPE in ('20','21','22') and p.SWITCH_ID = 'ITX7' and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm')) " +
-                    "pivot(" +
-                    " sum(DURATION_FLOAT)" +
-                    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
-                    " ) piv";
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
+                //cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.CALLING_OPERATOR from cdr_inter_itx_d_stat p " +
+                //    "where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and p.TRANSIT_TYPE in ('20','21','22') and p.SWITCH_ID = 'ITX7' and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm')) " +
+                //    "pivot(" +
+                //    " sum(DURATION_FLOAT)" +
+                //    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
+                //    " ) piv";
 
-                da = new OracleDataAdapter(cmd);
-                ds1 = new DataSet();
-                da.Fill(ds1);
+                //da = new OracleDataAdapter(cmd);
+                //ds1 = new DataSet();
+                //da.Fill(ds1);
 
-                name = "From ITX7 (From local operators to overseas)";
-                rowNum++;
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet3, ref ds1, rowNum, name, 1, operator_type);
+                //name = "From ITX7 (From local operators to overseas)";
+                //rowNum++;
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet3, ref ds1, rowNum, name, 1, operator_type);
 
-                ds1.Dispose();
-                da.Dispose();
-                LogViewer = "IDD Out: Completed query of hourly ITX7 data for local operator.";
+                //ds1.Dispose();
+                //da.Dispose();
+                //LogViewer = "IDD Out: Completed query of hourly ITX7 data for local operator.";
 
                 LogViewer = "IDD Out: Successfully created third sheet.";
 
@@ -726,7 +721,7 @@ namespace EReport
                 da.Fill(ds1);
 
                 rowNum = 1;
-                name = "From IGW-Total (IGW to carriers)";
+                name = "From IGW1 (IGW to carriers)";
                 operator_type = "Called Operatos";
 
                 rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet4, ref ds1, rowNum, name, 1, operator_type);
@@ -738,49 +733,49 @@ namespace EReport
 
 
                 //////////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.TRUNKOUT_OPERATOR from cdr_inter_itx_d_stat p" +
-                    " where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'dd') and p.TRANSIT_TYPE in ('20','21','22') and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'yyyymm') and p.SWITCH_ID = 'BTCL_IGW1')" +
-                    " pivot(" +
-                    " sum(DURATION_FLOAT) " +
-                    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
-                    " ) piv";
+                //cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.TRUNKOUT_OPERATOR from cdr_inter_itx_d_stat p" +
+                //    " where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'dd') and p.TRANSIT_TYPE in ('20','21','22') and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'yyyymm') and p.SWITCH_ID = 'BTCL_IGW1')" +
+                //    " pivot(" +
+                //    " sum(DURATION_FLOAT) " +
+                //    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
+                //    " ) piv";
 
-                da = new OracleDataAdapter(cmd);
-                ds1 = new DataSet();
-                da.Fill(ds1);
+                //da = new OracleDataAdapter(cmd);
+                //ds1 = new DataSet();
+                //da.Fill(ds1);
 
-                name = "From IGW1 (IGW to carriers)";
-                rowNum++;
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet4, ref ds1, rowNum, name, 1, operator_type);
+                //name = "From IGW1 (IGW to carriers)";
+                //rowNum++;
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet4, ref ds1, rowNum, name, 1, operator_type);
 
-                ds1.Dispose();
-                da.Dispose();
-                LogViewer = "IDD Out: Completed query of hourly IGW1 data for carrier.";
+                //ds1.Dispose();
+                //da.Dispose();
+                //LogViewer = "IDD Out: Completed query of hourly IGW1 data for carrier.";
 
 
-                /////////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.TRUNKOUT_OPERATOR from cdr_inter_itx_d_stat p" +
-                    " where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'dd') and p.TRANSIT_TYPE in ('20','21','22') and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'yyyymm') and p.SWITCH_ID = 'ITX7')" +
-                    " pivot(" +
-                    " sum(DURATION_FLOAT) " +
-                    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
-                    " ) piv";
+                ///////////////////////////////////////////////////////////////////////////////////////////////////
+                //cmd.CommandText = "select * from (select p.DURATION_FLOAT, p.HOURLY, p.TRUNKOUT_OPERATOR from cdr_inter_itx_d_stat p" +
+                //    " where p.PARTITION_DAY = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'dd') and p.TRANSIT_TYPE in ('20','21','22') and p.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + " ),'yyyymm') and p.SWITCH_ID = 'ITX7')" +
+                //    " pivot(" +
+                //    " sum(DURATION_FLOAT) " +
+                //    " for HOURLY in ('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23') " +
+                //    " ) piv";
 
-                da = new OracleDataAdapter(cmd);
-                ds1 = new DataSet();
-                da.Fill(ds1);
+                //da = new OracleDataAdapter(cmd);
+                //ds1 = new DataSet();
+                //da.Fill(ds1);
 
-                name = "From ITX7 (IGW to carriers)";
-                rowNum++;
-                rowNum++;
-                rowNum++;
-                rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet4, ref ds1, rowNum, name, 1, operator_type);
+                //name = "From ITX7 (IGW to carriers)";
+                //rowNum++;
+                //rowNum++;
+                //rowNum++;
+                //rowNum = EW.ExcelPlot_Hourly_Sheet_IDD(ref xlWorkSheet4, ref ds1, rowNum, name, 1, operator_type);
 
-                ds1.Dispose();
-                da.Dispose();
-                LogViewer = "IDD Out: Completed query of hourly ITX7 data for carrier.";
+                //ds1.Dispose();
+                //da.Dispose();
+                //LogViewer = "IDD Out: Completed query of hourly ITX7 data for carrier.";
 
                 LogViewer = "IDD Out: Successfully created fourth sheet.";
 

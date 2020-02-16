@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Deployment.Application;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -46,9 +47,10 @@ namespace EReport
             VM.PropertyChanged += View_PropertyChanged;
             IconInstance.Visible = true;
             this.Closing += MainWindow_Closing;
+            Application.Current.MainWindow.Loaded += MainWindow_Loaded;
 
             IconInstance.Text = "EReport";
-
+            SignatureBody.Text = VM.Signature;
 
             IconInstance.DoubleClick +=
                 delegate (object sender, EventArgs args)
@@ -58,24 +60,54 @@ namespace EReport
                     this.WindowState = WindowState.Maximized;
                 };
 
-            //IconInstance.MouseClick += ni_MouseClick;
+#if !DEBUG
+            versionNumber.Text = "Version: " + ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(4);
+#endif
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            if (MessageBox.Show("Closing application will delete all data, do you want to continue?", "EReport", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            if (MessageBox.Show("Do you want to close the application?", "EReport", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
             {
                 e.Cancel = true;
                 
             }
-            else if (MessageBox.Show("Are you sure?", "EReport", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
-            {
-                e.Cancel = true;
-            }
             else
             {
+                Properties.Settings.Default.Subject = Sub.Text;
+                Properties.Settings.Default.To = To.Text;
+                Properties.Settings.Default.CC = CC.Text;
+                Properties.Settings.Default.Bcc = Bcc.Text;
+                Properties.Settings.Default.Body = Body.Text;
+                Properties.Settings.Default.ActionTime = Action_time_textbox.Text;
+                Properties.Settings.Default.Email = user_email.Text;
+                Properties.Settings.Default.Password = acc_psw.Password;
+                Properties.Settings.Default.SMTPClient = SMTP_Client.Text;
+                Properties.Settings.Default.SMTPPort = SMTP_Port.Text;
+                Properties.Settings.Default.CheckError = (bool)IDD_Diff_Checkbox.IsChecked;
+                Properties.Settings.Default.IDDInErrorLimit = IDD_in_Error_percentage_textbox.Text;
+                Properties.Settings.Default.GeneralErrorLimit = General_percentage_textbox.Text;
+
+                Properties.Settings.Default.Save();
                 IconInstance.Dispose();
             }
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            Sub.Text = Properties.Settings.Default.Subject;
+            To.Text = Properties.Settings.Default.To;
+            CC.Text = Properties.Settings.Default.CC;
+            Bcc.Text = Properties.Settings.Default.Bcc;
+            Body.Text = Properties.Settings.Default.Body;
+            Action_time_textbox.Text = Properties.Settings.Default.ActionTime;
+            user_email.Text = Properties.Settings.Default.Email;
+            acc_psw.Password = Properties.Settings.Default.Password;
+            SMTP_Client.Text = Properties.Settings.Default.SMTPClient;
+            SMTP_Port.Text = Properties.Settings.Default.SMTPPort;
+            IDD_Diff_Checkbox.IsChecked = Properties.Settings.Default.CheckError;
+            IDD_in_Error_percentage_textbox.Text = Properties.Settings.Default.IDDInErrorLimit;
+            General_percentage_textbox.Text = Properties.Settings.Default.GeneralErrorLimit;
         }
 
         protected override void OnStateChanged(EventArgs e)
@@ -152,7 +184,7 @@ namespace EReport
                 //VM.Write_logFile("Successfully cleared previous day status.");
             }
 
-            if (CurrentTime == EventTime && VM.EmailSendorNot == true) //time for event fire
+            if (CurrentTime == EventTime && VM.ShouldEmailSendorNot == true) //time for event fire
             {
                 _date_picker.IsEnabled = false;
                 calender_btn.Content = "Enable Calender";
@@ -293,7 +325,7 @@ namespace EReport
 
         private void Alarm_TextBox_TextChanged_1(object sender, TextChangedEventArgs e)
         {
-            EventTime = Alarm_time_textbox.Text;
+            EventTime = Action_time_textbox.Text;
         }
 
         private void Send_btn_Click(object sender, RoutedEventArgs e)
@@ -301,7 +333,7 @@ namespace EReport
             if (MessageBox.Show("Do you really want to send mail for traffic date: " + DateTime.Today.Subtract(TimeSpan.FromDays(VM.SubtractiveDataDay)).ToShortDateString() + "?",
                 "EReport", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
-                if (VM.EmailSendorNot)
+                if (VM.ShouldEmailSendorNot)
                 {
                     if (To.Text != "")
                     {
@@ -336,9 +368,9 @@ namespace EReport
 
         private void Stop_btn_Click(object sender, RoutedEventArgs e)
         {
-            if (VM.EmailSendorNot)
+            if (VM.ShouldEmailSendorNot)
             {
-                VM.EmailSendorNot = false;
+                VM.ShouldEmailSendorNot = false;
                 StopMail_btn.Content = "Start Email";
                 if (!VM.MailingProgess)
                 {
@@ -351,7 +383,7 @@ namespace EReport
             }
             else
             {
-                VM.EmailSendorNot = true;
+                VM.ShouldEmailSendorNot = true;
                 StopMail_btn.Content = "Stop Email";
                 Show_LogTextblock("Auto Email started again.");
             }
@@ -394,7 +426,7 @@ namespace EReport
 
         private void user_name_TextChanged_1(object sender, TextChangedEventArgs e)
         {
-            VM.User_EmailID = user_name.Text;
+            VM.User_EmailID = user_email.Text;
         }
 
         private void SMTP_Client_TextChanged(object sender, TextChangedEventArgs e)
@@ -426,21 +458,21 @@ namespace EReport
         private void IDD_Diff_Checkbox_Checked_1(object sender, RoutedEventArgs e)
         {
             error_checkOrNot = true;
-            if(Error_percentage_textbox != null)
-                Error_percentage_textbox.IsEnabled = true;
+            if(IDD_in_Error_percentage_textbox != null)
+                IDD_in_Error_percentage_textbox.IsEnabled = true;
             Show_LogTextblock("Application will check IGW error.");
         }
 
         private void IDD_Diff_Checkbox_Unchecked_1(object sender, RoutedEventArgs e)
         {
             error_checkOrNot = false;
-            Error_percentage_textbox.IsEnabled = false;
+            IDD_in_Error_percentage_textbox.IsEnabled = false;
             Show_LogTextblock("Application will not check IGW error.");
         }
 
         private void Error_percentage_textbox_TextChanged_1(object sender, TextChangedEventArgs e)
         {
-            VM.IDDAcceptanceString = Error_percentage_textbox.Text;
+            VM.IDDAcceptanceString = IDD_in_Error_percentage_textbox.Text;
         }
 
         private void General_percentage_textbox_TextChanged_1(object sender, TextChangedEventArgs e)
