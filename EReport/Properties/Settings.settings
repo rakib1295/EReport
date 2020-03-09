@@ -36,7 +36,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="IDDInErrorLimit" Type="System.String" Scope="User">
-      <Value Profile="(Default)">0.3</Value>
+      <Value Profile="(Default)">0.5</Value>
     </Setting>
     <Setting Name="GeneralErrorLimit" Type="System.String" Scope="User">
       <Value Profile="(Default)">1.0</Value>

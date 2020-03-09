@@ -253,7 +253,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="IDD incoming traffic acceptance limit ICX vs. IGW (%)" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                        <TextBox Grid.Column="1" x:Name="IDD_in_Error_percentage_textbox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="40" Text="0.3" TextChanged="Error_percentage_textbox_TextChanged_1"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="1" x:Name="IDD_in_Error_percentage_textbox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="40" TextChanged="Error_percentage_textbox_TextChanged_1"  VerticalAlignment="Top"/>
                     </Grid>
                     <Grid Grid.Row="3">
                         <Grid.ColumnDefinitions>
@@ -261,7 +261,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="General traffic difference acceptance limit (%)" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
-                        <TextBox Grid.Column="1" x:Name="General_percentage_textbox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="40" Text="1.0" TextChanged="General_percentage_textbox_TextChanged_1"  VerticalAlignment="Top"/>
+                        <TextBox Grid.Column="1" x:Name="General_percentage_textbox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="40" TextChanged="General_percentage_textbox_TextChanged_1"  VerticalAlignment="Top"/>
                     </Grid>
                 </Grid> 
                 

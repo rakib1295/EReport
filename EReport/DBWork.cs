@@ -71,7 +71,7 @@ namespace EReport
                 cmd.Connection = conn;
 
                 //////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select t.TRUNKOUT_OPERATOR, TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                cmd.CommandText = "select t.TRUNKOUT_OPERATOR, sum(t.CDR_AMOUNT), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
                     " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '11' group by t.TRUNKOUT_OPERATOR order by t.TRUNKOUT_OPERATOR";
 
                 DataSet ds1;
@@ -97,7 +97,7 @@ namespace EReport
                 da.Dispose();
 
                 ////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = cmd.CommandText = "select t.CALLED_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- "
+                cmd.CommandText = cmd.CommandText = "select t.CALLED_OPERATOR, sum(t.CDR_AMOUNT), sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- "
                     + SubtractiveDataDay + "),'yyyymm') and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23','24','25') group by t.CALLED_OPERATOR order by  t.CALLED_OPERATOR";
 
                 ds1 = new DataSet();
@@ -108,7 +108,7 @@ namespace EReport
 
                 //rowNum++;
                 //rowNum++;
-                rowNum2 = EW.ExcelPlot_with_Compare(ref xlWorkSheet1, ref ds1, colNum + 4, name, operator_type);
+                rowNum2 = EW.ExcelPlot_with_Compare(ref xlWorkSheet1, ref ds1, colNum + 5, name, operator_type);
 
                 ds1.Dispose();
                 da.Dispose();
@@ -158,10 +158,10 @@ namespace EReport
                 Excel.Worksheet xlWorkSheet2 = xlWorkBook.Sheets.Add(misValue, xlWorkSheet1, 1, misValue);
                 xlWorkSheet2.Name = "International Carrier Wise";
 
-
                 /////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    "and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23','24','25') group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), sum(t.DURATION_FLOAT), p.network_type from cdr_inter_itx_stat t, prm3.ent_inter_operator_info p "
+                    + " where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') and t.partition_day = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23', '24', '25') and t.TRUNKIN_OPERATOR = p.partner_name "
+                    + " group by t.TRUNKIN_OPERATOR,p.network_type order by p.network_type desc, sum(t.DURATION_FLOAT) desc, t.TRUNKIN_OPERATOR";
                 ds1 = new DataSet();
                 da = new OracleDataAdapter(cmd);
                 da.Fill(ds1);
@@ -169,7 +169,27 @@ namespace EReport
                 name = "From IGW (From carriers to IGW)";
                 operator_type = "Calling Operators";
                 rowNum = 1;
-                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
+                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type, "Operator Trype");
+
+
+                ds1.Dispose();
+                da.Dispose();
+
+
+                /////////////////////////////////////////////////////////////////////////////////////////////
+                cmd.CommandText = "select p.network_type, sum(t.cdr_amount), sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t, prm3.ent_inter_operator_info p " +
+                    " where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') and t.partition_day = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('23', '24', '25') and t.TRUNKIN_OPERATOR = p.partner_name " +
+                    " group by p.network_type order by p.network_type desc, sum(t.DURATION_FLOAT) desc";
+                ds1 = new DataSet();
+                da = new OracleDataAdapter(cmd);
+                da.Fill(ds1);
+
+                name = "";
+                operator_type = "Carrier Type";
+
+                rowNum++;
+                rowNum++;
+                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type, "");
 
 
                 ds1.Dispose();
@@ -450,7 +470,7 @@ namespace EReport
                 cmd.Connection = conn;
 
                 //////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select t.TRUNKIN_OPERATOR, TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
                     " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
 
                 DataSet ds1;
@@ -476,7 +496,7 @@ namespace EReport
                 da.Dispose();
 
                 ////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = cmd.CommandText = "select t.CALLING_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- "
+                cmd.CommandText = cmd.CommandText = "select t.CALLING_OPERATOR, sum(t.cdr_amount), sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- "
                     + SubtractiveDataDay + "),'yyyymm') and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('20','21','22') group by t.CALLING_OPERATOR order by  t.CALLING_OPERATOR";
 
                 ds1 = new DataSet();
@@ -487,7 +507,7 @@ namespace EReport
 
                 rowNum++;
                 rowNum++;
-                rowNum2 = EW.ExcelPlot_with_Compare(ref xlWorkSheet1, ref ds1, 5, name, operator_type);
+                rowNum2 = EW.ExcelPlot_with_Compare(ref xlWorkSheet1, ref ds1, 6, name, operator_type);
 
                 ds1.Dispose();
                 da.Dispose();
@@ -540,7 +560,7 @@ namespace EReport
 
 
                 /////////////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = cmd.CommandText = "select t.TRUNKOUT_OPERATOR, sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                cmd.CommandText = cmd.CommandText = "select t.TRUNKOUT_OPERATOR, sum(t.cdr_amount), sum(t.DURATION_FLOAT) from cdr_inter_itx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
                     "and t.partition_day =  TO_CHAR((sysdate- " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE in ('20','21','22') group by t.TRUNKOUT_OPERATOR order by t.TRUNKOUT_OPERATOR";
                 ds1 = new DataSet();
                 da = new OracleDataAdapter(cmd);
@@ -550,7 +570,7 @@ namespace EReport
                 operator_type = "Called Operators";
 
                 rowNum = 1;
-                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type);
+                rowNum = EW.ExcelPlot_without_Compare(ref xlWorkSheet2, ref ds1, rowNum, name, operator_type, "");
 
 
                 ds1.Dispose();
@@ -899,7 +919,7 @@ namespace EReport
 
 
                 //////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select trunkin_operator, TO_CHAR(sum(t.duration) / 60) from cdr_inter_icx_stat t " +
+                cmd.CommandText = "select trunkin_operator, sum(t.cdr_amount), TO_CHAR(sum(t.duration) / 60) from cdr_inter_icx_stat t " +
                     " where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') " + " and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') " +
                     " and t.trunkout_operator = 'BTCL' and t.transit_type = '10' group by t.trunkin_operator order by t.trunkin_operator";
 
@@ -928,7 +948,7 @@ namespace EReport
 
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 ///
-                cmd.CommandText = "select t.settle_operator_1, sum(t.duration_float)  from cdr_inter_ans_stat t " +
+                cmd.CommandText = "select t.settle_operator_1, sum(t.cdr_amount), sum(t.duration_float)  from cdr_inter_ans_stat t " +
                     "where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') " + "and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') " +
                     " and t.transit_type = '33' and t.trunkin_operator = 'BTCL ICX' group by t.settle_operator_1 order by t.settle_operator_1";
 
@@ -939,7 +959,7 @@ namespace EReport
 
                 name = "From ANS (Other operators to BTCL ANS)";
                 operator_type = "Calling Operator";
-                colNum += 4;
+                colNum += 5;
 
                 rowNum2 = EW.ExcelPlot_with_Compare(ref xlWorkSheet1, ref ds1, colNum, name, operator_type);
 
@@ -1002,7 +1022,7 @@ namespace EReport
 
 
                 //////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select trunkout_operator, TO_CHAR(sum(t.duration)/60) from cdr_inter_icx_stat t " +
+                cmd.CommandText = "select trunkout_operator, sum(t.cdr_amount), TO_CHAR(sum(t.duration)/60) from cdr_inter_icx_stat t " +
                 " where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') " + " and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') " +
                 " and t.trunkin_operator = 'BTCL' and t.transit_type = '10' group by t.trunkout_operator order by t.trunkout_operator";
                 
@@ -1030,7 +1050,7 @@ namespace EReport
 
                 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 ///
-                cmd.CommandText = "select t.settle_operator_1, sum(t.duration_float) from cdr_inter_ans_stat t " +
+                cmd.CommandText = "select t.settle_operator_1, sum(t.cdr_amount), sum(t.duration_float) from cdr_inter_ans_stat t " +
                 "where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') " + " and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') " +
                 " and t.transit_type = '31' and trunkout_operator = 'BTCL ICX' group by t.settle_operator_1 order by t.settle_operator_1";
 
@@ -1041,7 +1061,7 @@ namespace EReport
 
                 name = "From ANS (BTCL ANS to Other operators)";
                 operator_type = "Called Operator";
-                colNum += 4;
+                colNum += 5;
 
                 rowNum2 = EW.ExcelPlot_with_Compare(ref xlWorkSheet1, ref ds1, colNum, name, operator_type);
 
