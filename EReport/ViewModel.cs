@@ -156,11 +156,10 @@ namespace EReport
 
             LogViewer = "Accessing remote database, please wait.... ... .. .";
             List<Task<String>> tasklist = new List<Task<String>>();
-            tasklist.Add(TaskHandleAsyncIDDIncoming(_dir));
-            tasklist.Add(TaskHandleAsyncIDDOutgoing(_dir));
-            tasklist.Add(TaskHandleAsyncANSIncoming(_dir));
-            tasklist.Add(TaskHandleAsyncANSOutgoing(_dir));
-            tasklist.Add(TaskHandleAsyncICX(_dir));
+            //tasklist.Add(TaskHandleAsyncIDDIncoming(_dir));
+            //tasklist.Add(TaskHandleAsyncIDDOutgoing(_dir));
+            tasklist.Add(TaskHandleAsyncANS(_dir));
+            //tasklist.Add(TaskHandleAsyncICX(_dir));
             string[] _filename = await Task.WhenAll(tasklist);
             
             Filename.Clear();
@@ -354,27 +353,27 @@ namespace EReport
             });
         }
 
-        private Task<String> TaskHandleAsyncANSIncoming(string _dir)
-        {
-            return Task.Run(() =>
-            {
-                String _file = "";
-                while (_file == "")
-                {
-                    _file = DBW.QueryDatabaseforANSLocalIncoming(SubtractiveDataDay, _dir, General_acceptance_diff);
-                }
-                return _file;
-            });
-        }
+        //private Task<String> TaskHandleAsyncANSIncoming(string _dir)
+        //{
+        //    return Task.Run(() =>
+        //    {
+        //        String _file = "";
+        //        while (_file == "")
+        //        {
+        //            _file = DBW.QueryDatabaseforANSLocalIncoming(SubtractiveDataDay, _dir, General_acceptance_diff);
+        //        }
+        //        return _file;
+        //    });
+        //}
 
-        private Task<String> TaskHandleAsyncANSOutgoing(string _dir)
+        private Task<String> TaskHandleAsyncANS(string _dir)
         {
             return Task.Run(() =>
             {
                 String _file = "";
                 while (_file == "")
                 {
-                    _file = DBW.QueryDatabaseforANSLocalOutgoing(SubtractiveDataDay, _dir, General_acceptance_diff);
+                    _file = DBW.QueryDatabaseforANSLocal(SubtractiveDataDay, _dir, General_acceptance_diff);
                 }
                 return _file;
             });

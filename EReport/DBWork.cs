@@ -904,110 +904,110 @@ namespace EReport
 
 
 
-        public String QueryDatabaseforANSLocalIncoming(int SubtractiveDataDay, String _folderPath, double Local_acceptance_diff)
-        {
-            String _filename = "";
+        //public String QueryDatabaseforANSLocalIncoming(int SubtractiveDataDay, String _folderPath, double Local_acceptance_diff)
+        //{
+        //    String _filename = "";
 
-            try
-            {
-                OracleDataAdapter da;
-                OracleConnection conn = new OracleConnection(OracldbLive);  // C#
-                conn.Open();
-                OracleCommand cmd = new OracleCommand();
-                cmd.CommandType = CommandType.Text;
-                cmd.Connection = conn;
-
-
-                //////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select trunkin_operator, sum(t.cdr_amount), TO_CHAR(sum(t.duration) / 60) from cdr_inter_icx_stat t " +
-                    " where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') " + " and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') " +
-                    " and t.trunkout_operator = 'BTCL' and t.transit_type = '10' group by t.trunkin_operator order by t.trunkin_operator";
+        //    try
+        //    {
+        //        OracleDataAdapter da;
+        //        OracleConnection conn = new OracleConnection(OracldbLive);  // C#
+        //        conn.Open();
+        //        OracleCommand cmd = new OracleCommand();
+        //        cmd.CommandType = CommandType.Text;
+        //        cmd.Connection = conn;
 
 
-                DataSet ds1;
-                ds1 = new DataSet();
-                da = new OracleDataAdapter(cmd);
-                da.Fill(ds1);
-
-                object misValue = System.Reflection.Missing.Value;
-                Excel.Application xlApp = new Excel.Application();
-                Excel.Workbook xlWorkBook = xlApp.Workbooks.Add(misValue);
-                Excel.Worksheet xlWorkSheet1 = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-                xlWorkSheet1.Name = "ANS Local Incoming";
-
-                int colNum = 1;
-                int rowNum1 = 0, rowNum2 = 0;
-                string name = "";
-                name = "From ICX (Other operators to BTCL ANS)";
-                string operator_type = "Calling Operator";
-
-                rowNum1 = EW.ExcelPlot_with_Compare(ref xlWorkSheet1, ref ds1, colNum, name, operator_type);
-
-                ds1.Dispose();
-                da.Dispose();
-
-                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                ///
-                cmd.CommandText = "select t.settle_operator_1, sum(t.cdr_amount), sum(t.duration_float)  from cdr_inter_ans_stat t " +
-                    "where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') " + "and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') " +
-                    " and t.transit_type = '33' and t.trunkin_operator = 'BTCL ICX' group by t.settle_operator_1 order by t.settle_operator_1";
+        //        //////////////////////////////////////////////////////////////////////////////////////
+        //        cmd.CommandText = "select trunkin_operator, sum(t.cdr_amount), TO_CHAR(sum(t.duration) / 60) from cdr_inter_icx_stat t " +
+        //            " where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') " + " and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') " +
+        //            " and t.trunkout_operator = 'BTCL' and t.transit_type = '10' group by t.trunkin_operator order by t.trunkin_operator";
 
 
-                ds1 = new DataSet();
-                da = new OracleDataAdapter(cmd);
-                da.Fill(ds1);
+        //        DataSet ds1;
+        //        ds1 = new DataSet();
+        //        da = new OracleDataAdapter(cmd);
+        //        da.Fill(ds1);
 
-                name = "From ANS (Other operators to BTCL ANS)";
-                operator_type = "Calling Operator";
-                colNum += 5;
+        //        object misValue = System.Reflection.Missing.Value;
+        //        Excel.Application xlApp = new Excel.Application();
+        //        Excel.Workbook xlWorkBook = xlApp.Workbooks.Add(misValue);
+        //        Excel.Worksheet xlWorkSheet1 = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+        //        xlWorkSheet1.Name = "ANS Local Incoming";
 
-                rowNum2 = EW.ExcelPlot_with_Compare(ref xlWorkSheet1, ref ds1, colNum, name, operator_type);
+        //        int colNum = 1;
+        //        int rowNum1 = 0, rowNum2 = 0;
+        //        string name = "";
+        //        name = "From ICX (Other operators to BTCL ANS)";
+        //        string operator_type = "Calling Operator";
 
-                ds1.Dispose();
-                da.Dispose();
+        //        rowNum1 = EW.ExcelPlot_with_Compare(ref xlWorkSheet1, ref ds1, colNum, name, operator_type);
 
-                EW.Difference_Entry_in_Excel(ref xlWorkSheet1, rowNum1, rowNum2, Local_acceptance_diff, "LEFT");
+        //        ds1.Dispose();
+        //        da.Dispose();
 
-                //LogViewer = "ANS Out: Successfully created first sheet.";
-                ///////////////////////////////////////////////////////////////First sheet completed/////////////////////
-                ///
-
-
-                //////////////////////////////////////////////////////////////////////Second Sheet completed/////////////
-                ///
-                ((Excel._Worksheet)xlWorkSheet1).Activate();
-
-                xlApp.DisplayAlerts = false;
-
-                string yy = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("yy");
-                string MMM = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("MMM");
-                string dd = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("dd");
-
-                _filename = _folderPath + "\\ANS_In_Local_" + dd + "-" + MMM + "-" + yy /*DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString()*/ + ".xls";
-                xlWorkBook.SaveAs(_filename, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
-                xlWorkBook.Close(true, misValue, misValue);
-                xlApp.Quit();
-
-                LogViewer = "Successfully created 3rd excel file for ANS Local incoming traffic data.";
+        //        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //        ///
+        //        cmd.CommandText = "select t.settle_operator_1, sum(t.cdr_amount), sum(t.duration_float)  from cdr_inter_ans_stat t " +
+        //            "where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') " + "and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') " +
+        //            " and t.transit_type = '33' and t.trunkin_operator = 'BTCL ICX' group by t.settle_operator_1 order by t.settle_operator_1";
 
 
-                cmd.Dispose();
-                conn.Dispose();
-                releaseObject(xlWorkSheet1);
-                releaseObject(xlWorkBook);
-                releaseObject(xlApp);
-            }
-            catch (Exception ex)
-            {
-                LogViewer = "Exception in ANS local incoming file creation: " + ex.Message;
-                FileLogger = LogViewer;
-                MessageBox.Show(LogViewer, "EReport", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+        //        ds1 = new DataSet();
+        //        da = new OracleDataAdapter(cmd);
+        //        da.Fill(ds1);
 
-            return _filename;
-        }
+        //        name = "From ANS (Other operators to BTCL ANS)";
+        //        operator_type = "Calling Operator";
+        //        colNum += 5;
 
-        public String QueryDatabaseforANSLocalOutgoing(int SubtractiveDataDay, String _folderPath, double Local_acceptance_diff)
+        //        rowNum2 = EW.ExcelPlot_with_Compare(ref xlWorkSheet1, ref ds1, colNum, name, operator_type);
+
+        //        ds1.Dispose();
+        //        da.Dispose();
+
+        //        EW.Difference_Entry_in_Excel(ref xlWorkSheet1, rowNum1, rowNum2, Local_acceptance_diff, "LEFT");
+
+        //        //LogViewer = "ANS Out: Successfully created first sheet.";
+        //        ///////////////////////////////////////////////////////////////First sheet completed/////////////////////
+        //        ///
+
+
+        //        //////////////////////////////////////////////////////////////////////Second Sheet completed/////////////
+        //        ///
+        //        ((Excel._Worksheet)xlWorkSheet1).Activate();
+
+        //        xlApp.DisplayAlerts = false;
+
+        //        string yy = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("yy");
+        //        string MMM = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("MMM");
+        //        string dd = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("dd");
+
+        //        _filename = _folderPath + "\\ANS_In_Local_" + dd + "-" + MMM + "-" + yy /*DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString()*/ + ".xls";
+        //        xlWorkBook.SaveAs(_filename, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+        //        xlWorkBook.Close(true, misValue, misValue);
+        //        xlApp.Quit();
+
+        //        LogViewer = "Successfully created 3rd excel file for ANS Local incoming traffic data.";
+
+
+        //        cmd.Dispose();
+        //        conn.Dispose();
+        //        releaseObject(xlWorkSheet1);
+        //        releaseObject(xlWorkBook);
+        //        releaseObject(xlApp);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LogViewer = "Exception in ANS local incoming file creation: " + ex.Message;
+        //        FileLogger = LogViewer;
+        //        MessageBox.Show(LogViewer, "EReport", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    }
+
+        //    return _filename;
+        //}
+
+        public String QueryDatabaseforANSLocal(int SubtractiveDataDay, String _folderPath, double Local_acceptance_diff)
         {
             String _filename = "";
 
@@ -1069,9 +1069,66 @@ namespace EReport
                 da.Dispose();
 
                 EW.Difference_Entry_in_Excel(ref xlWorkSheet1, rowNum1, rowNum2, Local_acceptance_diff, "LEFT");
+                LogViewer = "ANS Local Out: Successfully created 1st sheet.";
 
-                //////////////////////////////////////////////////////////////////////Second Sheet completed/////////////
+
+                //////////////////////////////////////////////////////////////////////First Sheet completed/////////////
                 ///
+
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                cmd.CommandText = "select trunkin_operator, sum(t.cdr_amount), TO_CHAR(sum(t.duration) / 60) from cdr_inter_icx_stat t " +
+                    " where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') " + " and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') " +
+                    " and t.trunkout_operator = 'BTCL' and t.transit_type = '10' group by t.trunkin_operator order by t.trunkin_operator";
+
+
+                ds1 = new DataSet();
+                da = new OracleDataAdapter(cmd);
+                da.Fill(ds1);
+
+                
+                Excel.Worksheet xlWorkSheet2 = xlWorkBook.Sheets.Add(misValue, xlWorkSheet1, 1, misValue);
+                xlWorkSheet2.Name = "ANS Local Incoming";
+
+                colNum = 1;
+                rowNum1 = 0;
+                rowNum2 = 0;
+                name = "";
+                name = "From ICX (Other operators to BTCL ANS)";
+                operator_type = "Calling Operator";
+
+                rowNum1 = EW.ExcelPlot_with_Compare(ref xlWorkSheet2, ref ds1, colNum, name, operator_type);
+
+                ds1.Dispose();
+                da.Dispose();
+
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                ///
+                cmd.CommandText = "select t.settle_operator_1, sum(t.cdr_amount), sum(t.duration_float)  from cdr_inter_ans_stat t " +
+                    "where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') " + "and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') " +
+                    " and t.transit_type = '33' and t.trunkin_operator = 'BTCL ICX' group by t.settle_operator_1 order by t.settle_operator_1";
+
+
+                ds1 = new DataSet();
+                da = new OracleDataAdapter(cmd);
+                da.Fill(ds1);
+
+                name = "From ANS (Other operators to BTCL ANS)";
+                operator_type = "Calling Operator";
+                colNum += 5;
+
+                rowNum2 = EW.ExcelPlot_with_Compare(ref xlWorkSheet2, ref ds1, colNum, name, operator_type);
+
+                ds1.Dispose();
+                da.Dispose();
+
+                EW.Difference_Entry_in_Excel(ref xlWorkSheet2, rowNum1, rowNum2, Local_acceptance_diff, "LEFT");
+
+                LogViewer = "ANS Local In: Successfully created 2nd sheet.";
+
+
+                //////////////////////////////////////////////////////////////////////Second sheet completed/////////////////////////
+
                 ((Excel._Worksheet)xlWorkSheet1).Activate();
 
                 xlApp.DisplayAlerts = false;
@@ -1080,23 +1137,23 @@ namespace EReport
                 string MMM = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("MMM");
                 string dd = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("dd");
 
-                _filename = _folderPath + "\\ANS_Out_Local_" + dd + "-" + MMM + "-" + yy /*DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString()*/ + ".xls";
+                _filename = _folderPath + "\\ANS_Local_" + dd + "-" + MMM + "-" + yy /*DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString()*/ + ".xls";
                 xlWorkBook.SaveAs(_filename, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
                 xlWorkBook.Close(true, misValue, misValue);
                 xlApp.Quit();
 
-                LogViewer = "Successfully created 4th excel file for ANS Local outgoing traffic data.";
-
+                LogViewer = "Successfully created 3rd excel file for ANS Local traffic data.";
 
                 cmd.Dispose();
                 conn.Dispose();
                 releaseObject(xlWorkSheet1);
+                releaseObject(xlWorkSheet2);
                 releaseObject(xlWorkBook);
                 releaseObject(xlApp);
             }
             catch (Exception ex)
             {
-                LogViewer = "Exception in ANS local outgoing file creation: " + ex.Message;
+                LogViewer = "Exception in ANS local file creation: " + ex.Message;
                 FileLogger = LogViewer;
                 MessageBox.Show(LogViewer, "EReport", MessageBoxButton.OK, MessageBoxImage.Error);
             }
