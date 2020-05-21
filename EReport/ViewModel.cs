@@ -156,10 +156,10 @@ namespace EReport
 
             LogViewer = "Accessing remote database, please wait.... ... .. .";
             List<Task<String>> tasklist = new List<Task<String>>();
-            //tasklist.Add(TaskHandleAsyncIDDIncoming(_dir));
-            //tasklist.Add(TaskHandleAsyncIDDOutgoing(_dir));
+            tasklist.Add(TaskHandleAsyncIDDIncoming(_dir));
+            tasklist.Add(TaskHandleAsyncIDDOutgoing(_dir));
             tasklist.Add(TaskHandleAsyncANS(_dir));
-            //tasklist.Add(TaskHandleAsyncICX(_dir));
+            tasklist.Add(TaskHandleAsyncICX(_dir));
             string[] _filename = await Task.WhenAll(tasklist);
             
             Filename.Clear();
