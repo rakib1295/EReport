@@ -1137,7 +1137,7 @@ namespace EReport
                 string MMM = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("MMM");
                 string dd = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("dd");
 
-                _filename = _folderPath + "\\ANS_Local_" + dd + "-" + MMM + "-" + yy /*DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString()*/ + ".xls";
+                _filename = _folderPath + "\\BTCL_Local_" + dd + "-" + MMM + "-" + yy /*DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString()*/ + ".xls";
                 xlWorkBook.SaveAs(_filename, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
                 xlWorkBook.Close(true, misValue, misValue);
                 xlApp.Quit();
@@ -1220,6 +1220,9 @@ namespace EReport
                 rowNum = EW.ExcelPlot_ICX_Local(ref xlWorkSheet1, ref ds1, rowNum, 60, TRUNKOUT_OPERATOR);
 
                 xlWorkSheet1.Application.ActiveWindow.SplitColumn = 2;
+                xlWorkSheet1.Application.ActiveWindow.FreezePanes = true;
+
+                xlWorkSheet1.Application.ActiveWindow.SplitRow = 2;
                 xlWorkSheet1.Application.ActiveWindow.FreezePanes = true;
 
                 xlApp.DisplayAlerts = false;
