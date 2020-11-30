@@ -1176,15 +1176,16 @@ namespace EReport
                 cmd.Connection = conn;
 
                 //////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select distinct(t.TRUNKOUT_OPERATOR) as TRUNKOUT_OPERATOR from cdr_inter_icx_stat t " +
-                " where t.BILLINGCYCLE = TO_CHAR((sysdate -  "+ SubtractiveDataDay + "), 'yyyymm') and t.PARTITION_DAY = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'dd') and t.TRANSIT_TYPE = '10' ";
+                cmd.CommandText = "select distinct partner_name from prm1.ent_inter_operator_info q " +
+                    " where q.partner_type = 'ANS' and q.expire_time >= to_date(TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') || '01000000', 'yyyy-mm-dd hh24:mi:ss') " +
+                    " order by q.partner_name asc";
 
                 OracleDataReader reader = cmd.ExecuteReader();
 
                 List<String> TRUNKOUT_OPERATOR = new List<string>();
                 while (reader.Read())
                 {
-                    TRUNKOUT_OPERATOR.Add(reader["TRUNKOUT_OPERATOR"].ToString());
+                    TRUNKOUT_OPERATOR.Add(reader["PARTNER_NAME"].ToString());
                 }
 
                 String _trunkout_operator = "";
@@ -1198,12 +1199,14 @@ namespace EReport
 
                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
                 ///
-                cmd.CommandText = "select * from " +
-                    " (select p.DURATION, p.TRUNKOUT_OPERATOR, p.TRUNKIN_OPERATOR from cdr_inter_icx_stat p " +
-                    " where p.PARTITION_DAY = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'dd') and p.TRANSIT_TYPE = '10' and p.BILLINGCYCLE = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm')) " +
-                    " pivot(" +
-                    " SUM(DURATION) for TRUNKOUT_OPERATOR in (" + _trunkout_operator + ")" +
-                    " ) piv";
+                cmd.CommandText = "select * from ( " +
+       " select t.partner_name, p.TRUNKOUT_OPERATOR, p.DURATION  from prm1.ent_inter_operator_info t " +
+       " left join cdr_inter_icx_stat p " +
+       " on (t.partner_name = p.trunkin_operator and p.PARTITION_DAY = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'dd') and p.TRANSIT_TYPE = '10' and p.BILLINGCYCLE = TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm')) " +
+       " where t.partner_type = 'ANS' and t.expire_time >= to_date(TO_CHAR((sysdate - " + SubtractiveDataDay + "), 'yyyymm') || '01000000', 'yyyy-mm-dd hh24:mi:ss')) " +
+       " pivot (SUM(DURATION) " +
+      " for TRUNKOUT_OPERATOR in (" + _trunkout_operator + ") " +
+      " ) piv order by partner_name asc ";
 
                 da = new OracleDataAdapter(cmd);
                 DataSet ds1 = new DataSet();
@@ -1230,6 +1233,12 @@ namespace EReport
                 string yy = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("yy");
                 string MMM = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("MMM");
                 string dd = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("dd");
+
+                Excel.Range range = xlWorkSheet1.get_Range((Excel.Range)xlWorkSheet1.Cells[1,1], (Excel.Range)xlWorkSheet1.Cells[1,2]);
+                range.Value = dd + "-" + MMM + "-" + yy;
+                range.Merge();
+                range.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+                range.Font.Italic = true;
 
                 _filename = _folderPath + "\\ICX_Local_" + dd + "-" + MMM + "-" + yy /*DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString()*/ + ".xls";
                 xlWorkBook.SaveAs(_filename, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
