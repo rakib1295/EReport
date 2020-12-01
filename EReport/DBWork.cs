@@ -1252,7 +1252,7 @@ namespace EReport
 
                 ds1.Dispose();
                 da.Dispose();
-                LogViewer = "Successfully created 5th excel file for ICX Local traffic data.";
+                LogViewer = "Successfully created 4th excel file for ICX Local traffic data.";
             }
             catch(Exception ex)
             {
