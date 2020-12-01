@@ -1234,11 +1234,9 @@ namespace EReport
                 string MMM = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("MMM");
                 string dd = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("dd");
 
-                Excel.Range range = xlWorkSheet1.get_Range((Excel.Range)xlWorkSheet1.Cells[1,1], (Excel.Range)xlWorkSheet1.Cells[1,2]);
-                range.Value = dd + "-" + MMM + "-" + yy;
-                range.Merge();
-                range.HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
-                range.Font.Italic = true;
+                xlWorkSheet1.Cells[1, 2] = dd + "-" + MMM + "-" + yy;
+                xlWorkSheet1.Cells[1, 2].HorizontalAlignment = Excel.XlHAlign.xlHAlignLeft;
+                xlWorkSheet1.Cells[1, 2].Font.Italic = true;
 
                 _filename = _folderPath + "\\ICX_Local_" + dd + "-" + MMM + "-" + yy /*DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString()*/ + ".xls";
                 xlWorkBook.SaveAs(_filename, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
