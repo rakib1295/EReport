@@ -12,7 +12,7 @@ namespace EReport.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.6.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -176,6 +176,42 @@ namespace EReport.Properties {
             }
             set {
                 this["GeneralErrorLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AdditionalEmailList {
+            get {
+                return ((string)(this["AdditionalEmailList"]));
+            }
+            set {
+                this["AdditionalEmailList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4:00:00 PM")]
+        public string AddtionalEmailTime {
+            get {
+                return ((string)(this["AddtionalEmailTime"]));
+            }
+            set {
+                this["AddtionalEmailTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool SendAdditionalEmail {
+            get {
+                return ((bool)(this["SendAdditionalEmail"]));
+            }
+            set {
+                this["SendAdditionalEmail"] = value;
             }
         }
     }

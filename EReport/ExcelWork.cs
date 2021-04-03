@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -170,6 +171,86 @@ namespace EReport
             rowNum++;
             return rowNum;
         }
+
+
+        public int ExcelPlot_ICX_Toll_Free(ref Excel.Worksheet _xlWorkSheet, ref DataSet ds1, int rowNum, string name)
+        {
+            int starting_num = rowNum;
+            string data;
+            int i, j;
+
+            //double d;
+
+            //var f = new NumberFormatInfo { NumberGroupSeparator = "," };
+
+            if (name != "")
+            {
+                _xlWorkSheet.Cells[rowNum, 1] = name;
+                _xlWorkSheet.Cells[rowNum, 1].EntireRow.Font.Bold = true;
+                Excel.Range _range1 = (Excel.Range)_xlWorkSheet.Cells[rowNum, 1];
+                Excel.Range _range2 = (Excel.Range)_xlWorkSheet.Cells[rowNum, 5];
+
+
+                Excel.Range workSheet_range = _xlWorkSheet.get_Range(_range1, _range2);
+                workSheet_range.Merge();
+                workSheet_range.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                workSheet_range.Interior.Color = Excel.XlRgbColor.rgbLavender;
+                rowNum++;
+            }
+
+
+            _xlWorkSheet.Cells[rowNum, 1] = "#";
+            _xlWorkSheet.Cells[rowNum, 2] = "Trunkin Operator";
+            _xlWorkSheet.Cells[rowNum, 3] = "Trunkin Operator";
+            _xlWorkSheet.Cells[rowNum, 4] = "Total Calls";
+            _xlWorkSheet.Cells[rowNum, 5] = "Total Minutes";
+            _xlWorkSheet.Cells[rowNum, 1].EntireRow.Font.Bold = true;
+            //xlWorkSheet.get_Range("A1", "C11").Borders.Color = System.Drawing.Black.ToArgb();
+
+            for (i = 0; i <= ds1.Tables[0].Rows.Count - 1; i++)
+            {
+                rowNum++;
+                _xlWorkSheet.Cells[rowNum, 1] = i + 1;
+                for (j = 0; j <= ds1.Tables[0].Columns.Count - 1; j++)
+                {
+                    data = ds1.Tables[0].Rows[i].ItemArray[j].ToString();
+                    _xlWorkSheet.Cells[rowNum, j + 2] = data;
+                    if (j == 2)
+                    {
+                        _xlWorkSheet.Cells[rowNum, j + 2].NumberFormat = "#,##0";
+                    }
+                    else if (j == 3)
+                    {
+                        _xlWorkSheet.Cells[rowNum, j + 2].NumberFormat = "#,##0.00";
+                    }
+                }
+            }
+
+            if (name != "")
+            {
+                rowNum++;
+                _xlWorkSheet.Cells[rowNum, 2] = "Total";
+                _xlWorkSheet.Cells[rowNum, 3] = "=SUM(D" + (starting_num + 2).ToString() + ":D" + (rowNum - 1).ToString() + ")";
+                _xlWorkSheet.Cells[rowNum, 3].NumberFormat = "#,##0";
+                _xlWorkSheet.Cells[rowNum, 4] = "=SUM(E" + (starting_num + 2).ToString() + ":E" + (rowNum - 1).ToString() + ")";
+                _xlWorkSheet.Cells[rowNum, 4].NumberFormat = "#,##0.00";
+                _xlWorkSheet.Cells[rowNum, 1].EntireRow.Font.Bold = true;
+            }
+
+            Excel.Range _rangeA = (Excel.Range)_xlWorkSheet.Cells[starting_num, 1];
+
+            Excel.Range _rangeB = (Excel.Range)_xlWorkSheet.Cells[rowNum, 5];
+
+            _xlWorkSheet.get_Range(_rangeA, _rangeB).Borders.LineStyle = Excel.XlLineStyle.xlContinuous;
+
+            _xlWorkSheet.get_Range("A1", "Z100").Columns.AutoFit();
+            _xlWorkSheet.get_Range("A1", "Z100").Rows.AutoFit();
+
+            rowNum++;
+            return rowNum;
+        }
+
+
         public int ExcelPlot_Hourly_Sheet_IDD(ref Excel.Worksheet _xlWorkSheet, ref DataSet ds1, int rowNum, string name, int divisor, string operator_type)
         {
             int starting_num = rowNum;
@@ -427,6 +508,33 @@ namespace EReport
             _xlWorkSheet.get_Range("A1", "Z100").Columns.AutoFit();
             _xlWorkSheet.get_Range("A1", "Z100").Rows.AutoFit();
             return rn;
+        }
+
+        internal int ExcelPlot_Error_Table(ref Worksheet xlWorkSheet, ref DataSet ds1, List<string> columnName)
+        {
+            xlWorkSheet.Cells[1, 1] = "#";
+            int i, j;
+
+            for (i = 0; i <= ds1.Tables[0].Columns.Count - 1; i++)
+            {
+                xlWorkSheet.Cells[1, i + 2] = columnName[i];
+            }
+
+            xlWorkSheet.Cells[1, 1].EntireRow.Font.Bold = true;
+
+            string data = "";
+            for (i = 0; i <= ds1.Tables[0].Rows.Count - 1; i++)
+            {
+                xlWorkSheet.Cells[i, 1] = i + 1;
+                for (j = 0; j <= ds1.Tables[0].Columns.Count - 1; j++)
+                {
+                    data = ds1.Tables[0].Rows[i].ItemArray[j].ToString();
+
+                    xlWorkSheet.Cells[i, j + 2] = data;
+                }
+            }
+
+            return i;
         }
     }
 }

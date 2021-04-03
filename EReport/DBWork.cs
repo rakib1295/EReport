@@ -24,6 +24,8 @@ namespace EReport
         ExcelWork EW = new ExcelWork();
         private String _logviewer = "";
         private String _fileLogger = "";
+
+        public int ANS_Error_Count, ICX_Error_Count, ITX_Error_Count;
         public String FileLogger
         {
             get { return _fileLogger; }
@@ -1228,6 +1230,46 @@ namespace EReport
                 xlWorkSheet1.Application.ActiveWindow.SplitRow = 2;
                 xlWorkSheet1.Application.ActiveWindow.FreezePanes = true;
 
+                ///////////////////////////////////////////1st sheet completed///////////////////////////////////////////
+                ///
+
+                Excel.Worksheet xlWorkSheet2 = xlWorkBook.Sheets.Add(misValue, xlWorkSheet1, 1, misValue);
+                xlWorkSheet2.Name = "Toll free";
+
+
+                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                    " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+
+                ds1 = new DataSet();
+                da = new OracleDataAdapter(cmd);
+                da.Fill(ds1);
+
+
+
+
+                int rownum = EW.ExcelPlot_ICX_Toll_Free(ref xlWorkSheet1, ref ds1, 1, "Local Outgoing");
+
+                ds1.Dispose();
+                da.Dispose();
+
+                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                    " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+
+                ds1 = new DataSet();
+                da = new OracleDataAdapter(cmd);
+                da.Fill(ds1);
+
+
+                rownum++;
+                rownum++;
+
+                rownum = EW.ExcelPlot_ICX_Toll_Free(ref xlWorkSheet1, ref ds1, rownum, "Local Incoming");
+
+                ds1.Dispose();
+                da.Dispose();
+
+
+
                 xlApp.DisplayAlerts = false;
 
                 string yy = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("yy");
@@ -1247,6 +1289,7 @@ namespace EReport
                 cmd.Dispose();
                 conn.Dispose();
                 releaseObject(xlWorkSheet1);
+                releaseObject(xlWorkSheet2);
                 releaseObject(xlWorkBook);
                 releaseObject(xlApp);
 
@@ -1263,6 +1306,126 @@ namespace EReport
 
                 return _filename;
         }
+
+
+        public String QueryDatabaseforErrorTable(int SubtractiveDataDay, String _folderPath)
+        {
+            String _filename = "";
+            List<string> columnName = new List<string>();
+            try
+            {
+                OracleDataAdapter da;
+                OracleConnection conn = new OracleConnection(OracldbLive);  // C#
+                conn.Open();
+                OracleCommand cmd = new OracleCommand();
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = conn;
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                    " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+
+                DataSet ds1;
+                ds1 = new DataSet();
+                da = new OracleDataAdapter(cmd);
+                da.Fill(ds1);
+
+                object misValue = System.Reflection.Missing.Value;
+                Excel.Application xlApp = new Excel.Application();
+                Excel.Workbook xlWorkBook = xlApp.Workbooks.Add(misValue);
+                Excel.Worksheet xlWorkSheet1 = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+                xlWorkSheet1.Name = "ITX Error";
+
+
+                ITX_Error_Count = EW.ExcelPlot_Error_Table(ref xlWorkSheet1, ref ds1, columnName);
+
+                ds1.Dispose();
+                da.Dispose();
+
+                ((Excel._Worksheet)xlWorkSheet1).Activate();
+                xlWorkSheet1.Application.ActiveWindow.SplitRow = 1;
+                xlWorkSheet1.Application.ActiveWindow.FreezePanes = true;
+
+                ///////////////////////////////////////////1st sheet completed///////////////////////////////////////////
+                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                    " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+
+                DataSet ds1;
+                ds1 = new DataSet();
+                da = new OracleDataAdapter(cmd);
+                da.Fill(ds1);
+
+
+                Excel.Worksheet xlWorkSheet2 = xlWorkBook.Sheets.Add(misValue, xlWorkSheet1, 1, misValue);
+                xlWorkSheet2.Name = "ANS Error";
+
+
+                ANS_Error_Count = EW.ExcelPlot_Error_Table(ref xlWorkSheet1, ref ds1, columnName);
+
+                ds1.Dispose();
+                da.Dispose();
+
+                ((Excel._Worksheet)xlWorkSheet2).Activate();
+                xlWorkSheet2.Application.ActiveWindow.SplitRow = 1;
+                xlWorkSheet2.Application.ActiveWindow.FreezePanes = true;
+
+                ///////////////////////////////////////////2nd sheet completed///////////////////////////////////////////
+                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
+                    " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+
+                DataSet ds1;
+                ds1 = new DataSet();
+                da = new OracleDataAdapter(cmd);
+                da.Fill(ds1);
+
+                Excel.Worksheet xlWorkSheet3 = xlWorkBook.Sheets.Add(misValue, xlWorkSheet2, 1, misValue);
+                xlWorkSheet3.Name = "ICX Error";
+
+
+                ICX_Error_Count = EW.ExcelPlot_Error_Table(ref xlWorkSheet1, ref ds1, columnName);
+
+                ds1.Dispose();
+                da.Dispose();
+                ///////////////////////////////////////////3rd sheet completed///////////////////////////////////////////
+
+                ((Excel._Worksheet)xlWorkSheet3).Activate();
+                xlWorkSheet3.Application.ActiveWindow.SplitRow = 1;
+                xlWorkSheet3.Application.ActiveWindow.FreezePanes = true;
+
+
+                ((Excel._Worksheet)xlWorkSheet1).Activate();
+                xlApp.DisplayAlerts = false;
+
+                string yy = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("yy");
+                string MMM = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("MMM");
+                string dd = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("dd");
+
+                _filename = _folderPath + "\\Error_" + dd + "-" + MMM + "-" + yy /*DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString()*/ + ".xls";
+                xlWorkBook.SaveAs(_filename, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+
+                LogViewer = "Successfully created 5th excel file for error table list.";
+
+
+                cmd.Dispose();
+                conn.Dispose();
+                releaseObject(xlWorkSheet1);
+                releaseObject(xlWorkSheet2);
+                releaseObject(xlWorkSheet3);
+                releaseObject(xlWorkBook);
+                releaseObject(xlApp);
+            }
+            catch (Exception ex)
+            {
+                LogViewer = "Exception in error file creation: " + ex.Message;
+                FileLogger = LogViewer;
+                MessageBox.Show(LogViewer, "EReport", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            return _filename;
+
+            }
+
 
         private void releaseObject(object obj)
         {

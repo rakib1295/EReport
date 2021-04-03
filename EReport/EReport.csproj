@@ -215,5 +215,8 @@
   <ItemGroup>
     <Resource Include="Images\BTCL-logo2.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\add.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

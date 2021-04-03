@@ -41,5 +41,14 @@
     <Setting Name="GeneralErrorLimit" Type="System.String" Scope="User">
       <Value Profile="(Default)">1.0</Value>
     </Setting>
+    <Setting Name="AdditionalEmailList" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="AddtionalEmailTime" Type="System.String" Scope="User">
+      <Value Profile="(Default)">4:00:00 PM</Value>
+    </Setting>
+    <Setting Name="SendAdditionalEmail" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

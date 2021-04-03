@@ -19,6 +19,7 @@ namespace EReport
         String[] To_address = new String[50];
         String[] CC_address = new String[100];
         String[] Bcc_address = new String[20];
+
         DBWork DBW = new DBWork();
 
         private String _logviewer = "";
@@ -49,6 +50,8 @@ namespace EReport
         public String MailSubject = "";
         public String MailBody = "";
 
+        public String AdditionalTo_String = "";
+        public bool SendAdditionalEmail = false;
 
         public String LogViewer
         {
@@ -126,7 +129,7 @@ namespace EReport
                 IDDincoming_Diff_actual = await IDDIncomingDifferenceCheck();
                 if (IDDincoming_Diff_actual <= IDDincoming_acceptance_diff)
                 {
-                    CallAsyncTasks();
+                    CallAsyncTasks("");
                 }
                 else
                 {
@@ -134,13 +137,17 @@ namespace EReport
                     Write_logFile(LogViewer);
                 }
             }
+            else if(_generator == "ADDITIONAL")
+            {
+                CallAsyncTasks("ADDITIONAL");
+            }
             else
             {
-                CallAsyncTasks();
+                CallAsyncTasks("");
             }
         }
 
-        private async void CallAsyncTasks()
+        private async void CallAsyncTasks(string type)
         {
             string YYYY = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).Year.ToString();
             string yy = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("yy");
@@ -160,6 +167,7 @@ namespace EReport
             tasklist.Add(TaskHandleAsyncIDDOutgoing(_dir));
             tasklist.Add(TaskHandleAsyncANS(_dir));
             tasklist.Add(TaskHandleAsyncICX(_dir));
+            tasklist.Add(TaskHandleAsyncErrorTable(_dir));
             string[] _filename = await Task.WhenAll(tasklist);
             
             Filename.Clear();
@@ -170,17 +178,17 @@ namespace EReport
             
             tasklist.Clear();
 
-            await TryToMailAsync();
+            await TryToMailAsync(type);
         }
 
-        private Task TryToMailAsync()
+        private Task TryToMailAsync(string type)
         {
-            return Task.Run(() => TryToMail());
+            return Task.Run(() => TryToMail(type));
         }
 
         public bool MailingProgess = false;
 
-        private async Task TryToMail()
+        private async Task TryToMail(string type)
         {
             bool replymail = false;
             MailingProgess = true;
@@ -194,7 +202,7 @@ namespace EReport
                     break;
                 }
 
-                replymail = await MailReportAsync();
+                replymail = await MailReportAsync(type);
 
                 if(replymail)
                 {
@@ -216,13 +224,13 @@ namespace EReport
             }
         }
 
-        private Task<bool> MailReportAsync()
+        private Task<bool> MailReportAsync(string type)
         {
             LogViewer = "Sending mail, please wait.... ... .. .";
-            return Task.Run(() => MailReport());
+            return Task.Run(() => MailReport(type));
         }
 
-        private bool MailReport()
+        private bool MailReport(string type)
         {
             bool reply;
             MailMessage mail = new MailMessage();
@@ -231,31 +239,43 @@ namespace EReport
 
             try
             {
-                To_address = To_String.Split(',');
-                for (int i = 0; i < To_address.Length; i++)
+                if (type != "ADDITIONAL")
                 {
-                    if (To_address[i] != "")
-                        mail.To.Add(To_address[i]);
-                }
-
-
-                if (CC_String != "")
-                {
-                    CC_address = CC_String.Split(',');
-                    for (int i = 0; i < CC_address.Length; i++)
+                    To_address = To_String.Split(',');
+                    for (int i = 0; i < To_address.Length; i++)
                     {
-                        if (CC_address[i] != "")
-                            mail.CC.Add(CC_address[i]);
+                        if (To_address[i] != "")
+                            mail.To.Add(To_address[i]);
+                    }
+
+
+                    if (CC_String != "")
+                    {
+                        CC_address = CC_String.Split(',');
+                        for (int i = 0; i < CC_address.Length; i++)
+                        {
+                            if (CC_address[i] != "")
+                                mail.CC.Add(CC_address[i]);
+                        }
+                    }
+
+                    if (BCC_String != "")
+                    {
+                        Bcc_address = BCC_String.Split(',');
+                        for (int i = 0; i < Bcc_address.Length; i++)
+                        {
+                            if (Bcc_address[i] != "")
+                                mail.Bcc.Add(Bcc_address[i]);
+                        }
                     }
                 }
-
-                if (BCC_String != "")
+                else
                 {
-                    Bcc_address = BCC_String.Split(',');
-                    for (int i = 0; i < Bcc_address.Length; i++)
+                    To_address = AdditionalTo_String.Split(',');
+                    for (int i = 0; i < To_address.Length; i++)
                     {
-                        if (Bcc_address[i] != "")
-                            mail.Bcc.Add(Bcc_address[i]);
+                        if (To_address[i] != "")
+                            mail.To.Add(To_address[i]);
                     }
                 }
 
@@ -264,6 +284,11 @@ namespace EReport
                 _mailbody = "Traffic date: " + DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString() + Environment.NewLine + Environment.NewLine;
 
                 _mailbody += MailBody; // body from window
+
+                string errormsg = "Today's error count: IGW error= " + DBW.ITX_Error_Count.ToString() + ", ANS error= " + DBW.ANS_Error_Count.ToString() +
+                    ", ICX error= " + DBW.ICX_Error_Count.ToString();
+
+                _mailbody += "\n\n" + errormsg;
 
                 _mailbody += "\n\n" + Signature;
 
@@ -387,6 +412,18 @@ namespace EReport
                 while (_file == "")
                 {
                     _file = DBW.QueryDatabaseforICX(SubtractiveDataDay, _dir);
+                }
+                return _file;
+            });
+        }
+        private Task<String> TaskHandleAsyncErrorTable(string _dir)
+        {
+            return Task.Run(() =>
+            {
+                String _file = "";
+                while (_file == "")
+                {
+                    _file = DBW.QueryDatabaseforErrorTable(SubtractiveDataDay, _dir);
                 }
                 return _file;
             });

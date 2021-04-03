@@ -26,7 +26,8 @@ namespace EReport
     /// </summary>
     public partial class MainWindow : Window
     {
-        String EventTime = "";        
+        String EventTime = "";
+        String EventTime2 = "";
         bool error_checkOrNot = true;
 
         ViewModel VM = new ViewModel();
@@ -74,23 +75,32 @@ namespace EReport
             }
             else
             {
-                Properties.Settings.Default.Subject = Sub.Text;
-                Properties.Settings.Default.To = To.Text;
-                Properties.Settings.Default.CC = CC.Text;
-                Properties.Settings.Default.Bcc = Bcc.Text;
-                Properties.Settings.Default.Body = Body.Text;
-                Properties.Settings.Default.ActionTime = Action_time_textbox.Text;
-                Properties.Settings.Default.Email = user_email.Text;
-                Properties.Settings.Default.Password = acc_psw.Password;
-                Properties.Settings.Default.SMTPClient = SMTP_Client.Text;
-                Properties.Settings.Default.SMTPPort = SMTP_Port.Text;
-                Properties.Settings.Default.CheckError = (bool)IDD_Diff_Checkbox.IsChecked;
-                Properties.Settings.Default.IDDInErrorLimit = IDD_in_Error_percentage_textbox.Text;
-                Properties.Settings.Default.GeneralErrorLimit = General_percentage_textbox.Text;
-
-                Properties.Settings.Default.Save();
+                SaveSettings();
                 IconInstance.Dispose();
             }
+        }
+
+        private void SaveSettings()
+        {
+            Properties.Settings.Default.Subject = Sub.Text;
+            Properties.Settings.Default.To = To.Text;
+            Properties.Settings.Default.CC = CC.Text;
+            Properties.Settings.Default.Bcc = Bcc.Text;
+            Properties.Settings.Default.Body = Body.Text;
+            Properties.Settings.Default.ActionTime = Action_time_textbox.Text;
+            Properties.Settings.Default.Email = user_email.Text;
+            Properties.Settings.Default.Password = acc_psw.Password;
+            Properties.Settings.Default.SMTPClient = SMTP_Client.Text;
+            Properties.Settings.Default.SMTPPort = SMTP_Port.Text;
+            Properties.Settings.Default.CheckError = (bool)IDD_Diff_Checkbox.IsChecked;
+            Properties.Settings.Default.IDDInErrorLimit = IDD_in_Error_percentage_textbox.Text;
+            Properties.Settings.Default.GeneralErrorLimit = General_percentage_textbox.Text;
+
+            Properties.Settings.Default.AddtionalEmailTime = AddEmailTime_TxtBox.Text;
+            Properties.Settings.Default.SendAdditionalEmail = (bool)Send_AdditionalEmail_Checkbox.IsChecked;
+            Properties.Settings.Default.AdditionalEmailList = AdditionalEmailList_TextBox.Text;
+
+            Properties.Settings.Default.Save();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -108,6 +118,10 @@ namespace EReport
             IDD_Diff_Checkbox.IsChecked = Properties.Settings.Default.CheckError;
             IDD_in_Error_percentage_textbox.Text = Properties.Settings.Default.IDDInErrorLimit;
             General_percentage_textbox.Text = Properties.Settings.Default.GeneralErrorLimit;
+
+            AddEmailTime_TxtBox.Text = Properties.Settings.Default.AddtionalEmailTime;
+            Send_AdditionalEmail_Checkbox.IsChecked = Properties.Settings.Default.SendAdditionalEmail;
+            AdditionalEmailList_TextBox.Text = Properties.Settings.Default.AdditionalEmailList;
         }
 
         protected override void OnStateChanged(EventArgs e)
@@ -184,7 +198,7 @@ namespace EReport
                 //VM.Write_logFile("Successfully cleared previous day status.");
             }
 
-            if (CurrentTime == EventTime && VM.ShouldEmailSendorNot == true) //time for event fire
+            else if (CurrentTime == EventTime && VM.ShouldEmailSendorNot) //time for event fire
             {
                 _date_picker.IsEnabled = false;
                 calender_btn.Content = "Enable Calender";
@@ -199,6 +213,23 @@ namespace EReport
                 {
                     Show_LogTextblock("Please select at least one recepient at 'To'");
                     MessageBox.Show("Please give at least one recepient at 'To'", "EReport", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (CurrentTime == EventTime2 && VM.ShouldEmailSendorNot && VM.SendAdditionalEmail) //time for event fire
+            {
+                _date_picker.IsEnabled = false;
+                calender_btn.Content = "Enable Calender";
+                _date_picker.SelectedDate = DateTime.Today.Subtract(TimeSpan.FromDays(1));
+                VM.SubtractiveDataDay = 0;
+
+                if (AdditionalEmailList_TextBox.Text != "")
+                {
+                    VM.TaskHandle("ADDITIONAL", false);
+                }
+                else
+                {
+                    Show_LogTextblock("Please select at least one recepient in additional email list in Extra tools");
+                    MessageBox.Show("Please give at least one recepient in additional email list in Extra tools", "EReport", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }
@@ -452,6 +483,7 @@ namespace EReport
 
         private void Settings_OK_btn_Click_1(object sender, RoutedEventArgs e)
         {
+            SaveSettings();
             Popup_Settings.IsOpen = false;
         }
 
@@ -529,6 +561,54 @@ namespace EReport
         {
             Popup_OpenFolder.IsOpen = false;
             timerforPopup.Stop();
+        }
+
+        private void AdditionalMail_function_Click(object sender, RoutedEventArgs e)
+        {
+            Popup_AdditionalMail.IsOpen = true;
+        }
+
+
+
+        private void Send_AdditionalEmail_Checkbox_Checked(object sender, RoutedEventArgs e)
+        {
+            VM.SendAdditionalEmail = true;
+            Show_LogTextblock("Additional email enabled.");
+            VM.Write_logFile("Additional email enabled.");
+            AddEmailTime_TxtBox.IsEnabled = true;
+            AdditionalEmailList_TextBox.IsEnabled = true;
+            AdditionalSendBtn.IsEnabled = true;
+        }
+
+        private void Send_AdditionalEmail_Checkbox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            VM.SendAdditionalEmail = false;
+            Show_LogTextblock("Additional email disabled.");
+            VM.Write_logFile("Additional email disabled.");
+            AddEmailTime_TxtBox.IsEnabled = false;
+            AdditionalEmailList_TextBox.IsEnabled = false;
+            AdditionalSendBtn.IsEnabled = false;
+        }
+
+        private void AddEmailTime_TxtBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EventTime2 = AddEmailTime_TxtBox.Text;
+        }
+
+        private void AdditionalEmailList_TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            VM.AdditionalTo_String = AdditionalEmailList_TextBox.Text;
+        }
+
+        private void Extra_OK_btn_Click(object sender, RoutedEventArgs e)
+        {
+            SaveSettings();
+            Popup_AdditionalMail.IsOpen = false;
+        }
+
+        private void AdditionalSendBtn_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }    
 }

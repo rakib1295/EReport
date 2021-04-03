@@ -32,6 +32,11 @@
                         <Image Source="/Images/settings_icon.ico" Height="15" Width="auto"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <MenuItem x:Name="AdditionalMail_function" Header="_Extra" Click="AdditionalMail_function_Click">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/add.ico" Height="15" Width="auto"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_View Instructions" MouseEnter="Instructions_MouseEnter_1" MouseLeave="Instructions_MouseLeave_1">
@@ -99,9 +104,9 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                        <Button x:Name="calender_btn" Grid.Column="2" Content="Enable Calender" Click="calender_btn_Click_1" HorizontalAlignment="Right" Margin="5,5" VerticalAlignment="Top"/>
-                        <DatePicker x:Name="_date_picker" Grid.Column="3" SelectedDateChanged="_date_picker_SelectedDateChanged_1" IsEnabled="False" HorizontalAlignment="Left" Margin="5,5" VerticalAlignment="Top" />
-                    </Grid>
+                    <Button x:Name="calender_btn" Grid.Column="2" Content="Enable Calender" Click="calender_btn_Click_1" HorizontalAlignment="Right" Margin="5,5" VerticalAlignment="Top"/>
+                    <DatePicker x:Name="_date_picker" Grid.Column="3" SelectedDateChanged="_date_picker_SelectedDateChanged_1" IsEnabled="False" HorizontalAlignment="Left" Margin="5,5" VerticalAlignment="Top" />
+                </Grid>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -263,10 +268,43 @@
                         <TextBlock Grid.Column="0" Text="General traffic difference acceptance limit (%)" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
                         <TextBox Grid.Column="1" x:Name="General_percentage_textbox" HorizontalAlignment="Left" TextWrapping="Wrap" Width="40" TextChanged="General_percentage_textbox_TextChanged_1"  VerticalAlignment="Top"/>
                     </Grid>
-                </Grid> 
-                
+                </Grid>
+
                 <Button x:Name="Settings_OK_btn" Grid.Row="2" Content="OK" Click="Settings_OK_btn_Click_1" Height="25" VerticalAlignment="Bottom" Width="80" Margin="5,5"/>
             </Grid>
+        </Popup>
+
+        <Popup x:Name="Popup_AdditionalMail" HorizontalAlignment="Left" Placement="Mouse"  VerticalAlignment="Top" IsOpen="False" Margin="0,0,0,0" Width="340" Height="300">
+            <Grid Background="#FFA7EAA7">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="Additional Email Settings" FontWeight="Bold"/>
+                <CheckBox Grid.Row="1" x:Name="Send_AdditionalEmail_Checkbox" IsChecked="False" Content="If checked, email will be send for current date traffic" Checked="Send_AdditionalEmail_Checkbox_Checked" Unchecked="Send_AdditionalEmail_Checkbox_Unchecked"/>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="Sending Time: " HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                    <TextBox Grid.Column="1" x:Name="AddEmailTime_TxtBox" HorizontalAlignment="Left" TextWrapping="Wrap" TextChanged="AddEmailTime_TxtBox_TextChanged"  VerticalAlignment="Top"/>
+                    <TextBlock Grid.Column="2" Text="or click here->"/>
+                    <Button x:Name="AdditionalSendBtn" Grid.Column="3" Content="Send" IsEnabled="False" Click="AdditionalSendBtn_Click" Width="50"/>
+                </Grid>
+                <TextBlock Grid.Row="3" Text="Give Email List with comma (',') separated" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                <TextBox Grid.Row="4" x:Name="AdditionalEmailList_TextBox" AcceptsReturn="True" TextWrapping="Wrap" Margin="10,5" TextChanged="AdditionalEmailList_TextBox_TextChanged"/>
+                <Button x:Name="Extra_OK_btn" Grid.Row="5" Content="OK" Click="Extra_OK_btn_Click" Height="25" VerticalAlignment="Bottom" Width="80" Margin="5,5"/>
+
+            </Grid>
+
+
         </Popup>
 
         <Popup Name="Popup_Instruct" HorizontalAlignment="Left" Placement="Mouse"  VerticalAlignment="Top" IsOpen="False">
