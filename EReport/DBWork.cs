@@ -1230,6 +1230,7 @@ namespace EReport
                 xlWorkSheet1.Application.ActiveWindow.SplitRow = 2;
                 xlWorkSheet1.Application.ActiveWindow.FreezePanes = true;
 
+                LogViewer = "ICX Local: 1st sheet completed.";
                 ///////////////////////////////////////////1st sheet completed///////////////////////////////////////////
                 ///
 
@@ -1237,8 +1238,10 @@ namespace EReport
                 xlWorkSheet2.Name = "Toll free";
 
 
-                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+                cmd.CommandText = @" select t.trunkin_operator,t.trunkout_operator, sum (cdr_amount) calls, TO_CHAR(sum(t.duration) / 60) total_min from cdr_inter_icx_stat t 
+                 where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + @"), 'yyyymm') and t.partition_day = TO_CHAR((sysdate - " + SubtractiveDataDay + @"), 'dd')
+                 and t.unit_price_1_1 ='0' and t.transit_type ='10' and t.trunkin_operator ='BTCL' 
+                 group by t.trunkout_operator, trunkin_operator order by trunkin_operator,trunkout_operator";
 
                 ds1 = new DataSet();
                 da = new OracleDataAdapter(cmd);
@@ -1247,13 +1250,15 @@ namespace EReport
 
 
 
-                int rownum = EW.ExcelPlot_ICX_Toll_Free(ref xlWorkSheet1, ref ds1, 1, "Local Outgoing");
+                int rownum = EW.ExcelPlot_ICX_Toll_Free(ref xlWorkSheet2, ref ds1, 1, "Local Outgoing");
 
                 ds1.Dispose();
                 da.Dispose();
 
-                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+                cmd.CommandText = @"select t.trunkin_operator,t.trunkout_operator, sum (cdr_amount) calls, TO_CHAR(sum(t.duration) / 60) total_min from cdr_inter_icx_stat t 
+                 where t.billingcycle = TO_CHAR((sysdate - " + SubtractiveDataDay + @"), 'yyyymm') and t.partition_day = TO_CHAR((sysdate - " + SubtractiveDataDay + @"), 'dd')
+                 and t.unit_price_1_1 ='0' and t.transit_type ='10' and t.trunkout_operator ='BTCL' 
+                 group by t.trunkout_operator, trunkin_operator order by trunkin_operator,trunkout_operator";
 
                 ds1 = new DataSet();
                 da = new OracleDataAdapter(cmd);
@@ -1263,13 +1268,13 @@ namespace EReport
                 rownum++;
                 rownum++;
 
-                rownum = EW.ExcelPlot_ICX_Toll_Free(ref xlWorkSheet1, ref ds1, rownum, "Local Incoming");
+                rownum = EW.ExcelPlot_ICX_Toll_Free(ref xlWorkSheet2, ref ds1, rownum, "Local Incoming");
 
                 ds1.Dispose();
                 da.Dispose();
 
 
-
+                LogViewer = "ICX Toll free: 2nd sheet completed.";
                 xlApp.DisplayAlerts = false;
 
                 string yy = DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToString("yy");
@@ -1321,9 +1326,20 @@ namespace EReport
                 cmd.CommandType = CommandType.Text;
                 cmd.Connection = conn;
 
+
+                cmd.CommandText = @"select column_name from user_tab_cols where table_name='CDR_INTER_ITX_ERROR' order by column_id";
+
+                columnName.Clear();
+                OracleDataReader reader = cmd.ExecuteReader();
+                while(reader.Read())
+                {
+                    columnName.Add(reader["COLUMN_NAME"].ToString());
+                }
+                reader.Dispose();
+
                 //////////////////////////////////////////////////////////////////////////////////////
-                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+                cmd.CommandText = @"select * from CDR_INTER_ITX_ERROR t
+                        where t.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + @"),'yyyymm') and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + @"),'dd')";
 
                 DataSet ds1;
                 ds1 = new DataSet();
@@ -1345,12 +1361,25 @@ namespace EReport
                 ((Excel._Worksheet)xlWorkSheet1).Activate();
                 xlWorkSheet1.Application.ActiveWindow.SplitRow = 1;
                 xlWorkSheet1.Application.ActiveWindow.FreezePanes = true;
+                LogViewer = "ERROR: 1st sheet completed for IGW.";
 
                 ///////////////////////////////////////////1st sheet completed///////////////////////////////////////////
-                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
 
-                DataSet ds1;
+                cmd.CommandText = @"select column_name from user_tab_cols where table_name='CDR_INTER_ANS_ERROR' order by column_id";
+
+                columnName.Clear();
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    columnName.Add(reader["COLUMN_NAME"].ToString());
+                }
+                reader.Dispose();
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                cmd.CommandText = @"select * from CDR_INTER_ANS_ERROR t
+                        where t.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + @"),'yyyymm') and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + @"),'dd')";
+
+
                 ds1 = new DataSet();
                 da = new OracleDataAdapter(cmd);
                 da.Fill(ds1);
@@ -1360,7 +1389,7 @@ namespace EReport
                 xlWorkSheet2.Name = "ANS Error";
 
 
-                ANS_Error_Count = EW.ExcelPlot_Error_Table(ref xlWorkSheet1, ref ds1, columnName);
+                ANS_Error_Count = EW.ExcelPlot_Error_Table(ref xlWorkSheet2, ref ds1, columnName);
 
                 ds1.Dispose();
                 da.Dispose();
@@ -1369,11 +1398,25 @@ namespace EReport
                 xlWorkSheet2.Application.ActiveWindow.SplitRow = 1;
                 xlWorkSheet2.Application.ActiveWindow.FreezePanes = true;
 
-                ///////////////////////////////////////////2nd sheet completed///////////////////////////////////////////
-                cmd.CommandText = "select t.TRUNKIN_OPERATOR, sum(t.cdr_amount), TO_CHAR(sum(t.DURATION)/60) from cdr_inter_icx_stat t where t.billingcycle = TO_CHAR((sysdate- " + SubtractiveDataDay + "),'yyyymm') " +
-                    " and t.partition_day =  TO_CHAR((sysdate-  " + SubtractiveDataDay + "),'dd') and t.TRANSIT_TYPE = '12' group by t.TRUNKIN_OPERATOR order by t.TRUNKIN_OPERATOR";
+                LogViewer = "ERROR: 2nd sheet completed for ANS.";
 
-                DataSet ds1;
+                ///////////////////////////////////////////2nd sheet completed///////////////////////////////////////////
+
+                cmd.CommandText = @"select column_name from user_tab_cols where table_name='CDR_INTER_ICX_ERROR' order by column_id";
+
+                columnName.Clear();
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    columnName.Add(reader["COLUMN_NAME"].ToString());
+                }
+                reader.Dispose();
+
+                //////////////////////////////////////////////////////////////////////////////////////
+                cmd.CommandText = @"select * from CDR_INTER_ICX_ERROR t
+                        where t.BILLINGCYCLE = TO_CHAR((sysdate- " + SubtractiveDataDay + @"),'yyyymm') and t.PARTITION_DAY = TO_CHAR((sysdate-  " + SubtractiveDataDay + @"),'dd')";
+
+
                 ds1 = new DataSet();
                 da = new OracleDataAdapter(cmd);
                 da.Fill(ds1);
@@ -1382,7 +1425,7 @@ namespace EReport
                 xlWorkSheet3.Name = "ICX Error";
 
 
-                ICX_Error_Count = EW.ExcelPlot_Error_Table(ref xlWorkSheet1, ref ds1, columnName);
+                ICX_Error_Count = EW.ExcelPlot_Error_Table(ref xlWorkSheet3, ref ds1, columnName);
 
                 ds1.Dispose();
                 da.Dispose();
@@ -1392,7 +1435,7 @@ namespace EReport
                 xlWorkSheet3.Application.ActiveWindow.SplitRow = 1;
                 xlWorkSheet3.Application.ActiveWindow.FreezePanes = true;
 
-
+                LogViewer = "ERROR: 3rd sheet completed for ICX.";
                 ((Excel._Worksheet)xlWorkSheet1).Activate();
                 xlApp.DisplayAlerts = false;
 

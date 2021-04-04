@@ -285,7 +285,8 @@ namespace EReport
 
                 _mailbody += MailBody; // body from window
 
-                string errormsg = "Today's error count: IGW error= " + DBW.ITX_Error_Count.ToString() + ", ANS error= " + DBW.ANS_Error_Count.ToString() +
+                string errormsg = "Error count for date: " + DateTime.Today.Subtract(TimeSpan.FromDays(SubtractiveDataDay)).ToShortDateString() 
+                    + ":- IGW error= " + DBW.ITX_Error_Count.ToString() + ", ANS error= " + DBW.ANS_Error_Count.ToString() +
                     ", ICX error= " + DBW.ICX_Error_Count.ToString();
 
                 _mailbody += "\n\n" + errormsg;

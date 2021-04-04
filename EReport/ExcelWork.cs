@@ -230,10 +230,10 @@ namespace EReport
             {
                 rowNum++;
                 _xlWorkSheet.Cells[rowNum, 2] = "Total";
-                _xlWorkSheet.Cells[rowNum, 3] = "=SUM(D" + (starting_num + 2).ToString() + ":D" + (rowNum - 1).ToString() + ")";
-                _xlWorkSheet.Cells[rowNum, 3].NumberFormat = "#,##0";
-                _xlWorkSheet.Cells[rowNum, 4] = "=SUM(E" + (starting_num + 2).ToString() + ":E" + (rowNum - 1).ToString() + ")";
-                _xlWorkSheet.Cells[rowNum, 4].NumberFormat = "#,##0.00";
+                _xlWorkSheet.Cells[rowNum, 4] = "=SUM(D" + (starting_num + 2).ToString() + ":D" + (rowNum - 1).ToString() + ")";
+                _xlWorkSheet.Cells[rowNum, 4].NumberFormat = "#,##0";
+                _xlWorkSheet.Cells[rowNum, 5] = "=SUM(E" + (starting_num + 2).ToString() + ":E" + (rowNum - 1).ToString() + ")";
+                _xlWorkSheet.Cells[rowNum, 5].NumberFormat = "#,##0.00";
                 _xlWorkSheet.Cells[rowNum, 1].EntireRow.Font.Bold = true;
             }
 
@@ -525,12 +525,12 @@ namespace EReport
             string data = "";
             for (i = 0; i <= ds1.Tables[0].Rows.Count - 1; i++)
             {
-                xlWorkSheet.Cells[i, 1] = i + 1;
+                xlWorkSheet.Cells[i + 2, 1] = i + 1;
                 for (j = 0; j <= ds1.Tables[0].Columns.Count - 1; j++)
                 {
                     data = ds1.Tables[0].Rows[i].ItemArray[j].ToString();
 
-                    xlWorkSheet.Cells[i, j + 2] = data;
+                    xlWorkSheet.Cells[i + 2, j + 2] = data;
                 }
             }
 
