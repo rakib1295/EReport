@@ -200,8 +200,8 @@ namespace EReport
 
 
             _xlWorkSheet.Cells[rowNum, 1] = "#";
-            _xlWorkSheet.Cells[rowNum, 2] = "Trunkin Operator";
-            _xlWorkSheet.Cells[rowNum, 3] = "Trunkin Operator";
+            _xlWorkSheet.Cells[rowNum, 2] = "Calling Operators";
+            _xlWorkSheet.Cells[rowNum, 3] = "Called Operators";
             _xlWorkSheet.Cells[rowNum, 4] = "Total Calls";
             _xlWorkSheet.Cells[rowNum, 5] = "Total Minutes";
             _xlWorkSheet.Cells[rowNum, 1].EntireRow.Font.Bold = true;
