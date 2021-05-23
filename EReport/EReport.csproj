@@ -27,8 +27,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>EReport</ProductName>
     <PublisherName>Md. Rakib Subaid</PublisherName>
-    <ApplicationRevision>74</ApplicationRevision>
-    <ApplicationVersion>7.16.0.%2a</ApplicationVersion>
+    <ApplicationRevision>75</ApplicationRevision>
+    <ApplicationVersion>7.17.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>

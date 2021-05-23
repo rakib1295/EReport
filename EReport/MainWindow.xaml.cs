@@ -185,10 +185,10 @@ namespace EReport
 
             if (CurrentTime == "12:00:00 AM") //###################################################CONSIDER ALWAYS########################################################
             {
-                //VM.SubtractiveDataDay = 1;
-                //_date_picker.IsEnabled = false;
-                //calender_btn.Content = "Enable Calender";
-                //_date_picker.SelectedDate = DateTime.Today.Subtract(TimeSpan.FromDays(1));
+                VM.SubtractiveDataDay = 1;
+                _date_picker.IsEnabled = false;
+                calender_btn.Content = "Enable Calender";
+                _date_picker.SelectedDate = DateTime.Today.Subtract(TimeSpan.FromDays(1));
 
                 Dispatcher.BeginInvoke((Action)(() =>
                 {
@@ -609,6 +609,31 @@ namespace EReport
         private void AdditionalSendBtn_Click(object sender, RoutedEventArgs e)
         {
 
+            if (MessageBox.Show("Do you really want to send mail for today?",
+                "EReport", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                if (VM.ShouldEmailSendorNot)
+                {
+                    _date_picker.IsEnabled = false;
+                    calender_btn.Content = "Enable Calender";
+                    _date_picker.SelectedDate = DateTime.Today.Subtract(TimeSpan.FromDays(1));
+                    VM.SubtractiveDataDay = 0;
+                    if (AdditionalEmailList_TextBox.Text != "")
+                    {
+                        VM.TaskHandle("ADDITIONAL", false);
+                    }
+                    else
+                    {
+                        Show_LogTextblock("Please select at least one recepient in additional email list in Extra tools");
+                        MessageBox.Show("Please give at least one recepient in additional email list in Extra tools", "EReport", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+                else
+                {
+                    Show_LogTextblock("Please start email first by clicking 'Start Email'");
+                    MessageBox.Show("Please start email first by clicking 'Start Email'", "EReport", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
         }
     }    
 }
